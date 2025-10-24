@@ -1,0 +1,30 @@
+# Code Owners for photo2profitai
+# This file defines who is responsible for reviewing PRs in different parts of the repository
+
+# Global ownership - all files require review from repository owner
+* @selfishthangs-ux
+
+# GitHub configuration files require owner approval
+/.github/ @selfishthangs-ux
+
+# Documentation changes can be reviewed by owner
+README.md @selfishthangs-ux
+*.md @selfishthangs-ux
+
+# Future: Add specific owners for different modules when code is added
+# Example patterns:
+# /src/auth/ @auth-team-lead
+# /src/api/ @backend-team
+# /frontend/ @frontend-team
+# /tests/ @qa-team
+
+# Security-sensitive files require owner approval
+.env* @selfishthangs-ux
+*.key @selfishthangs-ux
+*.pem @selfishthangs-ux
+secrets.* @selfishthangs-ux
+
+# CI/CD configuration requires owner approval
+/.github/workflows/ @selfishthangs-ux
+docker* @selfishthangs-ux
+**/docker* @selfishthangs-ux

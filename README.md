@@ -34,3 +34,18 @@ curl -sS https://photo2profit-backend-production.up.railway.app/api/founding-cou
 - ❌ **Wrong:** `LERT_DISCORD_WEBHOOK_URL` (missing the 'A')
 
 See [backend/README.md](backend/README.md) for detailed setup instructions and troubleshooting.
+
+## Contributing
+
+We welcome contributions from the community! Please read our [Contributing Guide](CONTRIBUTING.md) to get started.
+
+### Quick Links
+- 📋 [Contributing Guidelines](CONTRIBUTING.md) - How to contribute to the project
+- 🤖 [Copilot Coding Agent Guide](.github/COPILOT_CODING_AGENT.md) - Instructions for automated contributors
+- 🔒 [Security Policy](.github/CODEOWNERS) - Code ownership and security guidelines
+
+## Copilot coding agent
+
+This repository includes a Copilot coding agent guidance file with instructions for automated contributors: `.github/COPILOT_CODING_AGENT.md`.
+
+If you use or accept automated contributions, please read that file for agent permissions, branch/PR conventions, and next steps for maintainers.
