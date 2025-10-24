@@ -94,7 +94,7 @@ Photo2Profit is a next-generation AI resale tool that transforms any photo into 
 - Add detailed description if needed
 
 ## Project Structure
-(To be updated as the project grows)
+This structure will be updated as the project grows. Contributors should update this section when adding new major directories or components.
 
 ```
 photo2profitai/
@@ -105,9 +105,7 @@ photo2profitai/
 ```
 
 ## Tech Stack
-(To be defined as the project develops)
-
-The tech stack will be determined based on the project requirements. Consider:
+The tech stack will be finalized as the project requirements are fully defined. When selecting technologies, prioritize those that best support AI/ML integration, image processing, and scalability. Consider:
 - Modern web framework (React, Vue, Next.js, etc.)
 - Backend framework (Node.js, Python, Go, etc.)
 - AI/ML services for image recognition and text generation
