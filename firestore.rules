@@ -2,24 +2,26 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     // Users can read/write their own data
+    // Support both authenticated and anonymous users
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
     
-    // Users can read/write their own images
+    // Users can read/write their own listings under users/{userId}/listings/{listingId}
+    match /users/{userId}/listings/{listingId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      // Allow creation without checking resource (for new docs)
+      allow create: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Users can read/write their own images (deprecated, use users/{userId}/listings instead)
     match /images/{imageId} {
       allow read, write: if request.auth != null && 
         resource.data.userId == request.auth.uid;
     }
     
-    // Users can read/write their own listings  
-    match /listings/{listingId} {
-      allow read, write: if request.auth != null && 
-        resource.data.userId == request.auth.uid;
-    }
-    
     // Public read access to published listings
-    match /listings/{listingId} {
+    match /users/{userId}/listings/{listingId} {
       allow read: if resource.data.status == 'published';
     }
     
