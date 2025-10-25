@@ -24,6 +24,7 @@ export const ListingForm: React.FC<ListingFormProps> = ({ listingId }) => {
   // Initialize listing on mount
   useEffect(() => {
     initializeListing();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Auto-populate form when AI generates content

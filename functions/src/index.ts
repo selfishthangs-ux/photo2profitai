@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import axios from 'axios';
 import FormData from 'form-data';
-import * as sharp from 'sharp';
+import sharp from 'sharp';
 
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -64,6 +64,7 @@ export const processUploadedImage = functions.storage.object().onFinalize(async 
 
     // Create listing document in Firestore with processed image
     const listingData = {
+      id: imageId,
       userId,
       imageId,
       originalPath: name,
@@ -100,17 +101,20 @@ export const processUploadedImage = functions.storage.object().onFinalize(async 
   } catch (error) {
     console.error('Error processing image:', error);
     
-    // Update Firestore with error status
+    // Update Firestore with error status using new structure
+    const anonUserId = userId || 'anonymous';
     await admin.firestore()
-      .collection('images')
-      .doc(`${userId}_${imageId}`)
+      .collection('users')
+      .doc(anonUserId)
+      .collection('listings')
+      .doc(imageId)
       .set({
-        userId,
-        imageId,
+        userId: anonUserId,
+        id: imageId,
         originalPath: name,
         status: 'error',
         error: error.message,
-        processedAt: admin.firestore.FieldValue.serverTimestamp()
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
       }, { merge: true });
 
     throw new functions.https.HttpsError('internal', 'Failed to process image');
