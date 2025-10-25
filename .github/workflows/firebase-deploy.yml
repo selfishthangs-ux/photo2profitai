@@ -1,0 +1,91 @@
+name: Deploy to Firebase
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Setup Firebase credentials
+        id: auth
+        shell: bash
+        run: |
+          if [ -z "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" ]; then
+            echo "FIREBASE_SERVICE_ACCOUNT secret is missing" >&2
+            exit 1
+          fi
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > ${HOME}/gcloud.json
+          echo "GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcloud.json" >> $GITHUB_ENV
+          if [ -z "$PROJECT_ID" ]; then
+            echo "PROJECT_ID=photo2profit-ai" >> $GITHUB_ENV
+          fi
+
+      - name: Install Firebase CLI
+        run: |
+          npm install -g firebase-tools
+          firebase --version
+
+      - name: Install Functions dependencies
+        run: |
+          cd functions
+          npm install
+
+      - name: Build Functions
+        run: |
+          cd functions
+          npm run build
+
+      - name: Inject Firebase Web config into public/index.html (optional)
+        if: ${{ secrets.FIREBASE_WEB_API_KEY != '' }}
+        run: |
+          FILE=public/index.html
+          if [ -f "$FILE" ]; then
+            sed -i "s/YOUR_API_KEY/${{ secrets.FIREBASE_WEB_API_KEY }}/g" $FILE || true
+            sed -i "s/YOUR_PROJECT_ID/${{ env.PROJECT_ID }}/g" $FILE || true
+            sed -i "s/YOUR_MESSAGING_ID/${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}/g" $FILE || true
+            sed -i "s|YOUR_APP_ID|${{ secrets.FIREBASE_APP_ID }}|g" $FILE || true
+            sed -i "s|${env.PROJECT_ID}\.firebaseapp\.com|${{ secrets.FIREBASE_AUTH_DOMAIN || format('{0}.firebaseapp.com', env.PROJECT_ID) }}|g" $FILE || true
+            sed -i "s|${env.PROJECT_ID}\.appspot\.com|${{ secrets.FIREBASE_STORAGE_BUCKET || format('{0}.appspot.com', env.PROJECT_ID) }}|g" $FILE || true
+          fi
+
+      - name: Set Functions runtime config from secrets (optional)
+        run: |
+          set -e
+          # Only set keys that are present
+          if [ -n "${{ secrets.REMOVE_BG_API_KEY }}" ]; then
+            firebase functions:config:set removebg.api_key="${{ secrets.REMOVE_BG_API_KEY }}" --project "$PROJECT_ID"
+          fi
+          if [ -n "${{ secrets.GEMINI_API_KEY }}" ]; then
+            firebase functions:config:set gemini.api_key="${{ secrets.GEMINI_API_KEY }}" --project "$PROJECT_ID"
+          fi
+          if [ -n "${{ secrets.ANTHROPIC_API_KEY }}" ]; then
+            firebase functions:config:set anthropic.api_key="${{ secrets.ANTHROPIC_API_KEY }}" --project "$PROJECT_ID"
+          fi
+          if [ -n "${{ secrets.AI_PROVIDER }}" ]; then
+            firebase functions:config:set ai.provider="${{ secrets.AI_PROVIDER }}" --project "$PROJECT_ID"
+          fi
+
+      - name: Deploy Firestore and Storage rules
+        run: |
+          firebase deploy --only firestore:rules,storage:rules --project "$PROJECT_ID"
+
+      - name: Deploy Functions
+        run: |
+          firebase deploy --only functions --project "$PROJECT_ID"
+
+      - name: Deploy Hosting
+        run: |
+          firebase deploy --only hosting --project "$PROJECT_ID"
