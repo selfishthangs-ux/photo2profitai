@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Virtual Stylist AI – Sustainable Style for the Modern Era</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+  <style>
+    :root {
+      --rose: #c78a8a;
+      --rose2: #eac5c5;
+      --ink: #9e5e60;
+      --bg1: #fff5f5;
+      --bg2: #fce7e7;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2)), 
+                  url('./assets/images/landing-bg.jpg') center/cover no-repeat;
+      background-blend-mode: overlay;
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+    
+    /* Custom brand integration */
+    .brand-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .brand-logo {
+      height: 60px;
+      border-radius: 12px;
+      margin-right: 15px;
+      box-shadow: 0 4px 12px rgba(199,138,138,0.3);
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    
+    .brand-logo::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255,255,255,0.4) 50%, 
+        transparent 100%);
+      transition: left 0.6s ease;
+      border-radius: 12px;
+    }
+    
+    .brand-logo:hover::before {
+      left: 100%;
+    }
+    
+    .brand-logo:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(199,138,138,0.5);
+      filter: brightness(1.1);
+    }
+    .brand-accent {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      height: 80px;
+      border-radius: 12px;
+      opacity: 0.8;
+      box-shadow: 0 4px 12px rgba(199,138,138,0.3);
+    }
+    
+    header {
+      text-align: center;
+      padding: 60px 20px 40px;
+      position: relative;
+    }
+    header h1 {
+      font-size: 2.8rem;
+      background: linear-gradient(90deg, var(--rose), var(--rose2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+      position: relative;
+      cursor: default;
+      transition: all 0.3s ease;
+    }
+    
+    header h1:hover {
+      background: linear-gradient(90deg, var(--rose), #f0c5c5, var(--rose2), var(--rose));
+      background-size: 200% 100%;
+      animation: shimmerText 2s ease-in-out;
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+    
+    @keyframes shimmerText {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    header p {
+      font-size: 1.2rem;
+      color: #8a5c5e;
+    }
+    .cta-btn {
+      display: inline-block;
+      margin-top: 24px;
+      background: linear-gradient(90deg, var(--rose), var(--rose2));
+      color: white;
+      padding: 14px 28px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-weight: 600;
+      box-shadow: 0 6px 18px rgba(199,138,138,0.4);
+      transition: transform .2s;
+      border: none;
+      cursor: pointer;
+    }
+    .cta-btn:hover { transform: scale(1.05); }
+    section {
+      max-width: 1100px;
+      margin: 80px auto;
+      padding: 0 20px;
+      text-align: center;
+    }
+    h2 { font-size: 2rem; margin-bottom: 20px; }
+    p { margin-bottom: 18px; line-height: 1.6; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 30px;
+      margin-top: 30px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(233,180,180,0.3);
+      padding: 30px;
+      text-align: center;
+      transition: transform .2s;
+      backdrop-filter: blur(10px);
+    }
+    .card:hover { transform: translateY(-4px); }
+    .pricing {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+    .price-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(233,180,180,0.3);
+      padding: 30px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+    .price-card h3 {
+      color: var(--rose);
+      margin-bottom: 10px;
+    }
+    .price {
+      font-size: 2rem;
+      font-weight: 600;
+      margin: 10px 0;
+    }
+    footer {
+      background: var(--ink);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-top: 80px;
+      font-size: 0.9rem;
+    }
+    
+    /* Demo integration */
+    .demo-section {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      padding: 40px;
+      margin: 40px auto;
+      box-shadow: 0 8px 32px rgba(199,138,138,0.2);
+    }
+    .demo-btn {
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .2s;
+    }
+    .demo-btn:hover { transform: scale(1.05); }
+    
+    @media (max-width: 768px) {
+      .brand-accent { 
+        height: 60px; 
+        top: 10px; 
+        right: 10px; 
+      }
+      header h1 { font-size: 2.2rem; }
+      header p { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="./assets/images/brand-accent.jpg" alt="Brand Accent" class="brand-accent">
+    <div class="brand-header">
+      <img src="./assets/images/brand-logo.jpg" alt="Virtual Stylist AI Logo" class="brand-logo">
+      <div>
+        <h1>Virtual Stylist AI</h1>
+        <p>Style it. Resell it. Sustain it. The AI stylist for every wardrobe and every brand.</p>
+      </div>
+    </div>
+    <a href="#demo" class="cta-btn">✨ Try Demo Free</a>
+  </header>
+
+  <section id="demo" class="demo-section">
+    <h2>🎯 Live Demo - Photo2Profit Integration</h2>
+    <p>See how our AI transforms any photo into styled product listings</p>
+    <button class="demo-btn" onclick="window.open('/', '_blank')">
+      🚀 Launch Photo2Profit Demo
+    </button>
+    <p style="margin-top: 15px; font-size: 0.9rem; color: #666;">
+      Our backend Photo2Profit tool powers the AI styling engine
+    </p>
+  </section>
+
+  <section id="features">
+    <h2>Why Fashion Brands ❤️ Virtual Stylist AI</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>🧠 AI Styling Engine</h3>
+        <p>Upload any product or wardrobe photo and get instant outfit pairings styled by AI trained on real fashion trends.</p>
+      </div>
+      <div class="card">
+        <h3>♻️ Sustainable Shopping</h3>
+        <p>Encourage reuse and resale. Help your customers re-style what they own — or sell what they no longer wear.</p>
+      </div>
+      <div class="card">
+        <h3>💸 Drive Sales Effortlessly</h3>
+        <p>Increase conversions up to 30% by helping customers visualize outfits with your products or their own wardrobes.</p>
+      </div>
+      <div class="card">
+        <h3>🏷️ Plug & Play Widget</h3>
+        <p>Add one script tag to your Shopify, Wix, or Webflow store — your own branded AI stylist appears instantly.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <h2>How It Works</h2>
+    <p>Virtual Stylist AI blends visual understanding and trend data to make style suggestions that feel human — but work instantly.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>1️⃣ Upload Items</h3>
+        <p>Users upload wardrobe or product images. The AI removes backgrounds and tags colors, brand, and style.</p>
+      </div>
+      <div class="card">
+        <h3>2️⃣ Get Outfits</h3>
+        <p>The AI stylist suggests full outfits from your inventory or the user's closet — perfect for lookbooks or upsells.</p>
+      </div>
+      <div class="card">
+        <h3>3️⃣ Monetize</h3>
+        <p>Offer subscriptions, affiliate links, or in-store styling experiences powered by your custom AI assistant.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <h2>Pricing for Businesses</h2>
+    <div class="pricing">
+      <div class="price-card">
+        <h3>Starter</h3>
+        <div class="price">$49/mo</div>
+        <p>Up to 500 outfit suggestions<br>Basic AI Styling Widget<br>Email Support</p>
+        <button class="cta-btn" onclick="startCheckout('starter')">Start Free Trial</button>
+      </div>
+      <div class="price-card">
+        <h3>Pro</h3>
+        <div class="price">$149/mo</div>
+        <p>Unlimited AI Styling<br>White-label branding<br>Integration for Shopify & Webflow</p>
+        <button class="cta-btn" onclick="startCheckout('pro')">Upgrade to Pro</button>
+      </div>
+      <div class="price-card">
+        <h3>Enterprise</h3>
+        <div class="price">Custom</div>
+        <p>Full API access<br>Dedicated support<br>Styling data analytics dashboard</p>
+        <button class="cta-btn" onclick="bookDemo()">Book a Demo</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="sustainability">
+    <h2>Join the Sustainable Style Revolution</h2>
+    <p>Help your customers look amazing — and reduce waste. Every AI-powered outfit suggestion keeps fashion in rotation longer.</p>
+    <a href="#pricing" class="cta-btn">💎 Get Virtual Stylist AI</a>
+  </section>
+
+  <footer>
+    <p>© 2025 Virtual Stylist AI • Built by <a href="https://github.com/selfishthangs-ux" target="_blank" style="color: var(--rose2);">@selfishthangs-ux</a> • All Rights Reserved</p>
+    <p style="margin-top: 10px; font-size: 0.8rem;">
+      🚀 Powered by Photo2ProfitAI • <a href="https://github.com/selfishthangs-ux/photo2profitai" target="_blank" style="color: var(--rose2);">Open Source</a>
+    </p>
+  </footer>
+
+  <script>
+    async function startCheckout(plan) {
+      try {
+        // Show loading state
+        event.target.innerHTML = '⏳ Loading...';
+        event.target.disabled = true;
+        
+        const response = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            plan: plan,
+            successUrl: window.location.origin + '/success',
+            cancelUrl: window.location.origin + '/virtual-stylist'
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (data.checkoutUrl) {
+          // Redirect to Stripe checkout
+          window.location.href = data.checkoutUrl;
+        } else {
+          throw new Error(data.error || 'Failed to create checkout session');
+        }
+        
+      } catch (error) {
+        console.error('Checkout error:', error);
+        alert('Sorry, there was an error starting checkout. Please try again.');
+        
+        // Reset button
+        event.target.innerHTML = event.target.dataset.originalText;
+        event.target.disabled = false;
+      }
+    }
+    
+    function bookDemo() {
+      // Open email client for enterprise inquiries
+      const subject = encodeURIComponent('Virtual Stylist AI Enterprise Demo Request');
+      const body = encodeURIComponent(`Hi,
+
+I'm interested in an enterprise demo for Virtual Stylist AI.
+
+Company: 
+Industry: 
+Expected Usage: 
+
+Please let me know your availability for a demo.
+
+Best regards,`);
+      
+      window.location.href = `mailto:hello@virtualstylist.ai?subject=${subject}&body=${body}`;
+    }
+    
+    // Store original button text for reset
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.cta-btn').forEach(btn => {
+        btn.dataset.originalText = btn.innerHTML;
+      });
+    });
+    
+    // Check backend status and show connection indicator
+    fetch('/health')
+      .then(res => res.json())
+      .then(data => {
+        console.log('✅ Backend connected:', data);
+        
+        // Add status indicator
+        const indicator = document.createElement('div');
+        indicator.innerHTML = '🟢 Payments Active';
+        indicator.style.cssText = 'position: fixed; top: 10px; left: 10px; background: rgba(0,255,0,0.1); padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; color: green; z-index: 1000;';
+        document.body.appendChild(indicator);
+      })
+      .catch(err => {
+        console.log('❌ Backend offline:', err);
+        
+        // Add offline indicator
+        const indicator = document.createElement('div');
+        indicator.innerHTML = '🔴 Demo Mode';
+        indicator.style.cssText = 'position: fixed; top: 10px; left: 10px; background: rgba(255,0,0,0.1); padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; color: red; z-index: 1000;';
+        document.body.appendChild(indicator);
+      });
+      
+    // Track page views for conversion optimization
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'page_view', {
+        page_title: 'Virtual Stylist AI Landing',
+        page_location: window.location.href
+      });
+    }
+  </script>
+
+</body>
+</html>

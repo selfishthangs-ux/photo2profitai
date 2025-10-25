@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo2ProfitAI - Transform Photos into Profitable Listings</title>
+    <meta name="description" content="AI-powered tool that transforms any photo into ready-to-sell product listings. Perfect for creators, thrifters, and e-commerce entrepreneurs.">
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' style='stop-color:%23667eea'/><stop offset='50%' style='stop-color:%23f093fb'/><stop offset='100%' style='stop-color:%23f5576c'/></linearGradient></defs><rect x='4' y='10' width='24' height='16' rx='3' fill='url(%23g)'/><circle cx='16' cy='18' r='5' fill='white'/><circle cx='16' cy='18' r='3' fill='url(%23g)'/><rect x='20' y='12' width='3' height='2' rx='1' fill='white'/><text x='16' y='9' font-family='Arial' font-size='8' font-weight='bold' fill='%23ffd700' text-anchor='middle'>$</text></svg>">" fallback>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --rose-gold: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gold: #ffd700;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --bg-light: rgba(255, 255, 255, 0.95);
+            --shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%), 
+                        url('./assets/images/landing-bg.jpg') center/cover no-repeat;
+            min-height: 100vh;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        /* Header with Branding */
+        .header {
+            background: var(--bg-light);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            background: var(--rose-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .brand-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: var(--rose-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .brand-tagline {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--text-dark);
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .cta-button {
+            background: var(--rose-gold);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(240, 147, 251, 0.4);
+        }
+        
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: white;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hero p {
+            font-size: 1.4rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-features {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .hero-feature {
+            text-align: center;
+            opacity: 0.9;
+        }
+        
+        .hero-feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .hero-feature h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        /* Main App Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+        
+        .upload-section, .listing-section {
+            background: var(--bg-light);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-icon {
+            font-size: 1.5rem;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        
+        .upload-area {
+            border: 3px dashed #ddd;
+            border-radius: 15px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .upload-area:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+        
+        .upload-area.dragover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+        
+        .preview-container {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        .background-controls {
+            margin-top: 1.5rem;
+            display: none;
+        }
+        
+        .bg-presets {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1rem;
+            justify-content: center;
+        }
+        
+        .bg-preset {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+        
+        .bg-preset.active {
+            border-color: #667eea;
+        }
+        
+        .bg-white { background: white; }
+        .bg-beige { background: #f5f5dc; }
+        .bg-blush { background: #fde2e4; }
+        .bg-rose { background: #f8d7da; }
+        
+        .custom-color {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #colorPicker {
+            width: 50px;
+            height: 40px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: var(--rose-gold);
+            color: white;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(240, 147, 251, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border: 1px solid #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+        
+        .listing-preview {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            display: none;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        
+        .status-online { background: #28a745; }
+        .status-offline { background: #dc3545; }
+        
+        .footer-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .powered-by {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+        
+        .powered-by a {
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                padding: 0 1rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-features {
+                gap: 2rem;
+            }
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            color: #667eea;
+        }
+        
+        .api-status {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Your Branding -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <img src="./assets/images/brand-logo.jpg" alt="Photo2ProfitAI Logo" style="height: 50px; border-radius: 8px; margin-right: 1rem;">
+                <div class="brand-text">
+                    <div class="brand-name">Photo2ProfitAI</div>
+                    <div class="brand-tagline">Transform Photos into Profit</div>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#about">About</a>
+                <a href="/api/founding-count">API Status</a>
+                <a href="https://github.com/selfishthangs-ux/photo2profitai" class="cta-button">View Source</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Landing Section -->
+    <section class="hero" style="background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('./assets/images/hero-image.jpg') center/cover no-repeat; position: relative;">
+        <div style="position: absolute; top: 20px; right: 20px;">
+            <img src="./assets/images/brand-accent.jpg" alt="Brand Accent" style="height: 80px; border-radius: 10px; opacity: 0.9;">
+        </div>
+        <h1>Turn Any Photo Into Cash</h1>
+        <p>AI-powered tool that transforms your photos into professional product listings in seconds. Perfect for creators, thrifters, and e-commerce entrepreneurs.</p>
+        
+        <div class="hero-features">
+            <div class="hero-feature">
+                <div class="hero-feature-icon">🤖</div>
+                <h3>AI-Powered Recognition</h3>
+            </div>
+            <div class="hero-feature">
+                <div class="hero-feature-icon">✨</div>
+                <h3>Background Removal</h3>
+            </div>
+            <div class="hero-feature">
+                <div class="hero-feature-icon">💰</div>
+                <h3>Smart Pricing</h3>
+            </div>
+            <div class="hero-feature">
+                <div class="hero-feature-icon">📝</div>
+                <h3>Auto Descriptions</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Application -->
+    <div class="main-container">
+        <div class="upload-section">
+            <div class="section-header">
+                <div class="section-icon">📤</div>
+                <div class="section-title">Upload Your Product Photo</div>
+            </div>
+            <div class="api-status">
+                Backend Status: <span class="status-indicator" id="backendStatus"></span>
+                <span id="backendStatusText">Checking...</span>
+            </div>
+            
+                        <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                <div class="upload-icon">�</div>
+                <h3>Drop your product photo here</h3>
+                <p>or click to browse</p>
+                <p>Supports JPG, PNG, WebP up to 10MB</p>
+                <input type="file" id="fileInput" accept="image/*">
+            </div>
+            
+            <!-- URL Upload Option -->
+            <div style="margin-top: 1rem; text-align: center;">
+                <p style="color: #666; margin-bottom: 0.5rem;">Or paste an image URL:</p>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg" 
+                           style="flex: 1; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
+                    <button onclick="loadFromUrl()" class="btn btn-secondary" style="padding: 0.5rem 1rem;">Load</button>
+                </div>
+            </div>
+            
+            <div class="preview-container" id="previewContainer" style="display: none;">
+                <img id="previewImage" class="preview-image" alt="Preview">
+                
+                <div class="background-controls" id="backgroundControls">
+                    <h4>Background Options</h4>
+                    <div class="bg-presets">
+                        <div class="bg-preset bg-white active" data-bg="white"></div>
+                        <div class="bg-preset bg-beige" data-bg="beige"></div>
+                        <div class="bg-preset bg-blush" data-bg="blush"></div>
+                        <div class="bg-preset bg-rose" data-bg="rose"></div>
+                    </div>
+                    <div class="custom-color">
+                        <label for="colorPicker">Custom:</label>
+                        <input type="color" id="colorPicker" value="#ffffff">
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="removeBackground()">✨ Remove Background</button>
+                    <button class="btn btn-secondary" onclick="enhanceImage()">🔧 Enhance Image</button>
+                </div>
+                
+                <div class="loading" id="processingLoader">
+                    <p>🤖 AI is processing your image...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="listing-section">
+            <div class="section-header">
+                <div class="section-icon">📝</div>
+                <div class="section-title">Product Listing Details</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="title">Product Title</label>
+                <input type="text" id="title" placeholder="AI will suggest a title based on your photo">
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" rows="4" placeholder="AI will generate a compelling description..."></textarea>
+                <button class="btn btn-secondary" onclick="generateDescription()" style="margin-top: 0.5rem;">🤖 Generate AI Description</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category">
+                    <option value="">AI will suggest category</option>
+                    <option value="clothing">Clothing & Accessories</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="home">Home & Garden</option>
+                    <option value="books">Books & Media</option>
+                    <option value="toys">Toys & Games</option>
+                    <option value="sports">Sports & Outdoors</option>
+                    <option value="beauty">Beauty & Personal Care</option>
+                    <option value="automotive">Automotive</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Pricing Strategy</label>
+                <div class="pricing-grid">
+                    <div>
+                        <label for="thriftPrice">Thrift Price</label>
+                        <input type="number" id="thriftPrice" placeholder="$0.00" step="0.01">
+                    </div>
+                    <div>
+                        <label for="marketPrice">Market Price</label>
+                        <input type="number" id="marketPrice" placeholder="$0.00" step="0.01">
+                    </div>
+                    <div>
+                        <label for="retailPrice">Retail Price</label>
+                        <input type="number" id="retailPrice" placeholder="$0.00" step="0.01">
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="suggestPrices()" style="margin-top: 1rem; width: 100%;">💰 AI Suggest Prices</button>
+            </div>
+            
+            <div class="listing-preview" id="listingPreview">
+                <h3>📋 Listing Preview</h3>
+                <div id="previewContent"></div>
+            </div>
+        </div>
+        
+        <div class="footer-actions">
+            <button class="btn btn-primary" onclick="downloadImage()">📥 Download Image</button>
+            <button class="btn btn-primary" onclick="copyListing()">📋 Copy Listing</button>
+            <button class="btn btn-secondary" onclick="saveAsJSON()">💾 Save JSON</button>
+            <button class="btn btn-secondary" onclick="shareImage()">🔗 Share</button>
+            <button class="btn btn-secondary" onclick="startNew()">🆕 New Project</button>
+        </div>
+    </div>
+
+    <!-- Footer with Your Branding -->
+    <footer class="powered-by">
+        <p>
+            Made with ❤️ by <a href="https://github.com/selfishthangs-ux" target="_blank">@selfishthangs-ux</a> | 
+            Powered by <strong>Photo2ProfitAI</strong> | 
+            <a href="https://github.com/selfishthangs-ux/photo2profitai" target="_blank">Open Source</a>
+        </p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.8;">
+            🚀 Transform any photo into profit • AI-powered product listings • Background removal • Smart pricing
+        </p>
+    </footer>
+
+    <script>
+        // Configuration - Connect to your Photo2Profit backend
+        const CONFIG = {
+            BACKEND_URL: window.location.origin, // Use current server
+            REMOVER_ENDPOINT: '/api/remove-background', // Placeholder endpoint
+            PRICE_SVC_ENDPOINT: '/api/suggest-prices',
+            DESC_SVC_ENDPOINT: '/api/generate-description'
+        };
+
+        let currentImage = null;
+        let processedImage = null;
+
+        // Check backend status on load
+        async function checkBackendStatus() {
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+                document.getElementById('backendStatus').className = 'status-indicator status-online';
+                document.getElementById('backendStatusText').textContent = 'Online';
+            } catch (error) {
+                document.getElementById('backendStatus').className = 'status-indicator status-offline';
+                document.getElementById('backendStatusText').textContent = 'Offline';
+            }
+        }
+
+        // File upload handling
+        document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+        
+        // Drag and drop
+        const uploadArea = document.querySelector('.upload-area');
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        }
+
+        // New function to load image from URL
+        function loadFromUrl() {
+            const url = document.getElementById('imageUrl').value.trim();
+            if (!url) {
+                alert('Please enter an image URL');
+                return;
+            }
+            
+            // Create a temporary image to test if URL is valid
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = function() {
+                // Convert URL image to File object
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                
+                canvas.toBlob(function(blob) {
+                    const file = new File([blob], 'url-image.jpg', { type: 'image/jpeg' });
+                    handleFile(file);
+                }, 'image/jpeg', 0.9);
+            };
+            img.onerror = function() {
+                alert('Failed to load image from URL. Please check the URL and try again.');
+            };
+            img.src = url;
+        }
+
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file');
+                return;
+            }
+            
+            if (file.size > 10 * 1024 * 1024) {
+                alert('File size must be less than 10MB');
+                return;
+            }
+
+            currentImage = file;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = document.getElementById('previewImage');
+                img.src = e.target.result;
+                document.getElementById('previewContainer').style.display = 'block';
+                document.getElementById('backgroundControls').style.display = 'block';
+                
+                // Auto-generate title and description
+                autoAnalyzeImage(file.name);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function autoAnalyzeImage(filename) {
+            // Auto-suggest title based on filename
+            const title = filename.replace(/\.[^/.]+$/, "").replace(/[-_]/g, ' ');
+            document.getElementById('title').value = title.charAt(0).toUpperCase() + title.slice(1);
+            
+            // Show listing preview
+            updateListingPreview();
+        }
+
+        // Background removal with real API integration
+        async function removeBackground() {
+            if (!currentImage) return;
+            
+            showLoading(true);
+            
+            try {
+                // Convert image to base64
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img = document.getElementById('previewImage');
+                
+                canvas.width = img.naturalWidth;
+                canvas.height = img.naturalHeight;
+                ctx.drawImage(img, 0, 0);
+                
+                const imageData = canvas.toDataURL('image/jpeg', 0.9);
+                
+                // Call backend API
+                const response = await fetch('/api/remove-background', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ imageData })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Update image with processed result
+                    document.getElementById('previewImage').src = result.pngDataUrl;
+                    processedImage = result.pngDataUrl;
+                    alert(`🎉 Background removed successfully!\\n\\nCredits remaining: ${result.credits_remaining}`);
+                } else if (result.demo) {
+                    // Demo mode - show setup instructions
+                    alert(`🔧 Background Removal Setup Needed\\n\\n${result.instructions.step1}\\n${result.instructions.step2}\\n${result.instructions.step3}\\n\\nCurrently running in demo mode.`);
+                } else {
+                    // Handle errors
+                    alert(`❌ ${result.error}\\n\\n${result.message}`);
+                }
+                
+            } catch (error) {
+                console.error('Background removal error:', error);
+                alert('❌ Background removal failed: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Image enhancement (placeholder)
+        async function enhanceImage() {
+            if (!currentImage) return;
+            
+            showLoading(true);
+            
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                alert('✨ Image enhanced! \\n\\n(This is a demo - connect your image enhancement API)');
+            } catch (error) {
+                alert('❌ Enhancement failed: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // AI Description generation
+        async function generateDescription() {
+            const title = document.getElementById('title').value;
+            if (!title) {
+                alert('Please add a title first');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                // Connect to your backend API for description generation
+                const response = await fetch('/api/generate-description', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, image: currentImage?.name })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('description').value = data.description;
+                } else {
+                    // Fallback demo description
+                    const demoDescription = `High-quality ${title} in excellent condition. Perfect for daily use or special occasions. Well-maintained and ready for its next owner. Authentic and stylish piece that combines functionality with great design.`;
+                    document.getElementById('description').value = demoDescription;
+                }
+                
+                updateListingPreview();
+            } catch (error) {
+                // Demo fallback
+                const demoDescription = `Beautiful ${title} in great condition. This item has been carefully maintained and is ready for its new home. A perfect addition to any collection.`;
+                document.getElementById('description').value = demoDescription;
+                updateListingPreview();
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // AI Price suggestion
+        async function suggestPrices() {
+            const title = document.getElementById('title').value;
+            if (!title) {
+                alert('Please add a title first');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                // Connect to your backend for price suggestions
+                const response = await fetch('/api/suggest-prices', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, category: document.getElementById('category').value })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('thriftPrice').value = data.thriftPrice;
+                    document.getElementById('marketPrice').value = data.marketPrice;
+                    document.getElementById('retailPrice').value = data.retailPrice;
+                } else {
+                    // Demo prices
+                    setDemoPrices();
+                }
+                
+                updateListingPreview();
+            } catch (error) {
+                // Demo fallback prices
+                setDemoPrices();
+                updateListingPreview();
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function setDemoPrices() {
+            const basePrice = Math.floor(Math.random() * 50) + 10;
+            document.getElementById('thriftPrice').value = basePrice.toFixed(2);
+            document.getElementById('marketPrice').value = (basePrice * 1.5).toFixed(2);
+            document.getElementById('retailPrice').value = (basePrice * 2.2).toFixed(2);
+        }
+
+        // Background preset handling
+        document.querySelectorAll('.bg-preset').forEach(preset => {
+            preset.addEventListener('click', () => {
+                document.querySelectorAll('.bg-preset').forEach(p => p.classList.remove('active'));
+                preset.classList.add('active');
+                
+                const bg = preset.dataset.bg;
+                const colors = {
+                    white: '#ffffff',
+                    beige: '#f5f5dc',
+                    blush: '#fde2e4',
+                    rose: '#f8d7da'
+                };
+                
+                applyBackground(colors[bg]);
+            });
+        });
+
+        document.getElementById('colorPicker').addEventListener('change', (e) => {
+            document.querySelectorAll('.bg-preset').forEach(p => p.classList.remove('active'));
+            applyBackground(e.target.value);
+        });
+
+        function applyBackground(color) {
+            const img = document.getElementById('previewImage');
+            img.style.backgroundColor = color;
+            img.style.padding = '20px';
+        }
+
+        // Listing preview
+        function updateListingPreview() {
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const category = document.getElementById('category').value;
+            const thriftPrice = document.getElementById('thriftPrice').value;
+            const marketPrice = document.getElementById('marketPrice').value;
+            const retailPrice = document.getElementById('retailPrice').value;
+            
+            if (title || description) {
+                const preview = document.getElementById('listingPreview');
+                const content = document.getElementById('previewContent');
+                
+                content.innerHTML = `
+                    <h4>${title || 'Product Title'}</h4>
+                    <p>${description || 'Product description will appear here...'}</p>
+                    <p><strong>Category:</strong> ${category || 'Not specified'}</p>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        ${thriftPrice ? `<span><strong>Thrift:</strong> $${thriftPrice}</span>` : ''}
+                        ${marketPrice ? `<span><strong>Market:</strong> $${marketPrice}</span>` : ''}
+                        ${retailPrice ? `<span><strong>Retail:</strong> $${retailPrice}</span>` : ''}
+                    </div>
+                `;
+                
+                preview.style.display = 'block';
+            }
+        }
+
+        // Action buttons
+        function downloadImage() {
+            const img = document.getElementById('previewImage');
+            if (!img.src) {
+                alert('No image to download');
+                return;
+            }
+            
+            const link = document.createElement('a');
+            link.download = 'photo2profit-processed-image.jpg';
+            link.href = img.src;
+            link.click();
+        }
+
+        function copyListing() {
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const category = document.getElementById('category').value;
+            const thriftPrice = document.getElementById('thriftPrice').value;
+            const marketPrice = document.getElementById('marketPrice').value;
+            const retailPrice = document.getElementById('retailPrice').value;
+            
+            const listing = `${title}
+
+${description}
+
+Category: ${category}
+Thrift Price: $${thriftPrice}
+Market Price: $${marketPrice}
+Retail Price: $${retailPrice}
+
+Generated by Photo2Profit AI`;
+
+            navigator.clipboard.writeText(listing).then(() => {
+                alert('📋 Listing copied to clipboard!');
+            });
+        }
+
+        function saveAsJSON() {
+            const data = {
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                category: document.getElementById('category').value,
+                pricing: {
+                    thrift: document.getElementById('thriftPrice').value,
+                    market: document.getElementById('marketPrice').value,
+                    retail: document.getElementById('retailPrice').value
+                },
+                timestamp: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.download = 'photo2profit-listing.json';
+            link.href = URL.createObjectURL(blob);
+            link.click();
+        }
+
+        function shareImage() {
+            if (navigator.share && currentImage) {
+                navigator.share({
+                    title: 'Photo2Profit Listing',
+                    text: document.getElementById('title').value,
+                    files: [currentImage]
+                });
+            } else {
+                alert('🔗 Share functionality requires a secure connection (HTTPS)');
+            }
+        }
+
+        function startNew() {
+            if (confirm('Start a new project? This will clear all current data.')) {
+                location.reload();
+            }
+        }
+
+        function showLoading(show) {
+            document.getElementById('processingLoader').style.display = show ? 'block' : 'none';
+        }
+
+        // Auto-update preview when inputs change
+        ['title', 'description', 'category', 'thriftPrice', 'marketPrice', 'retailPrice'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updateListingPreview);
+        });
+
+        // Initialize
+        checkBackendStatus();
+    </script>
+</body>
+</html>

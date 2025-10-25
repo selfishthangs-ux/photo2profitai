@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHOTO2PROFIT - Turn Any Photo Into Profit</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-functions-compat.js"></script>
+    
+    <style>
+        :root {
+            --rose-gold: linear-gradient(135deg, #E8B4B8 0%, #D4A574 25%, #C78A8A 50%, #B67F7F 75%, #A86B6B 100%);
+            --rose-gold-light: linear-gradient(135deg, #F5D6D8 0%, #E8C4A8 25%, #DBA8A8 50%, #CE9393 75%, #C18585 100%);
+            --blush: #F8E8E9;
+            --blush-light: #FDF5F5;
+            --text-dark: #2D1B1E;
+            --text-medium: #5D4A4D;
+            --text-light: #8A7A7D;
+            --white: #FFFFFF;
+            --shadow: 0 8px 32px rgba(200, 138, 138, 0.15);
+            --shadow-lg: 0 20px 60px rgba(200, 138, 138, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--blush-light) 0%, var(--blush) 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(200, 138, 138, 0.1);
+            z-index: 100;
+            padding: 1rem 0;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: var(--rose-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-medium);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-dark);
+        }
+
+        /* Hero Section */
+        .hero {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: var(--rose-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-medium);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Upload Section */
+        .upload-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(200, 138, 138, 0.1);
+        }
+
+        .upload-area {
+            border: 3px dashed #DBA8A8;
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .upload-area:hover,
+        .upload-area.dragover {
+            border-color: #C78A8A;
+            background: var(--blush-light);
+            transform: translateY(-2px);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #C78A8A;
+        }
+
+        .upload-text {
+            font-size: 1.1rem;
+            color: var(--text-medium);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-subtext {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        /* Preview Section */
+        .preview-section {
+            display: none;
+            margin-top: 2rem;
+        }
+
+        .image-preview {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .preview-image {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .processing-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #DBA8A8;
+            border-top: 4px solid #C78A8A;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Form Fields */
+        .listing-form {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input,
+        .form-textarea {
+            padding: 0.75rem 1rem;
+            border: 2px solid #E8B4B8;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #C78A8A;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .price-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--rose-gold);
+            color: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--text-dark);
+            border: 2px solid #E8B4B8;
+        }
+
+        .btn-secondary:hover {
+            border-color: #C78A8A;
+            background: var(--blush-light);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+
+        /* Status Messages */
+        .status-message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .status-success {
+            background: #D4F4DD;
+            color: #166534;
+            border: 1px solid #A7F3D0;
+        }
+
+        .status-error {
+            background: #FED7D7;
+            color: #C53030;
+            border: 1px solid #FCA5A5;
+        }
+
+        .status-processing {
+            background: var(--blush-light);
+            color: var(--text-dark);
+            border: 1px solid #E8B4B8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .upload-container {
+                margin: 0 1rem;
+                padding: 2rem;
+            }
+            
+            .price-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* Auth styles */
+        .auth-container {
+            max-width: 400px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">PHOTO2PROFIT</div>
+            <nav class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <div id="auth-section">
+                    <button id="login-btn" class="btn btn-secondary">Login</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Turn Any Photo Into Profit</h1>
+        <p>AI-powered background removal, smart pricing, and automatic listing generation for resellers, thrifters, and e-commerce entrepreneurs.</p>
+    </section>
+
+    <!-- Auth Container (hidden by default) -->
+    <div id="auth-container" class="auth-container" style="display: none;">
+        <h2>Sign In to Continue</h2>
+        <p>Create an account or sign in to start processing your photos.</p>
+        <button id="google-signin" class="btn btn-primary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Sign in with Google
+        </button>
+    </div>
+
+    <!-- Main Upload Container -->
+    <div id="main-container" class="upload-container" style="display: none;">
+        <!-- Status Messages -->
+        <div id="status-container"></div>
+
+        <!-- Upload Area -->
+        <div class="upload-area" id="upload-area">
+            <div class="upload-icon">📸</div>
+            <div class="upload-text">Drop your product photo here</div>
+            <div class="upload-subtext">or click to browse • JPG, PNG up to 10MB</div>
+            <input type="file" id="file-input" accept="image/*">
+        </div>
+
+        <!-- Preview Section -->
+        <div id="preview-section" class="preview-section">
+            <div class="image-preview">
+                <img id="preview-image" class="preview-image" alt="Preview">
+                <div id="processing-overlay" class="processing-overlay" style="display: none;">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <!-- Listing Form -->
+            <form id="listing-form" class="listing-form">
+                <div class="form-group">
+                    <label class="form-label">Product Title</label>
+                    <input type="text" id="title-input" class="form-input" placeholder="AI will generate a title based on your photo">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea id="description-input" class="form-textarea" placeholder="AI will generate a detailed description"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Pricing Strategy</label>
+                    <div class="price-grid">
+                        <div>
+                            <label class="form-label">Thrift Price</label>
+                            <input type="number" id="thrift-price" class="form-input" placeholder="$5.00" step="0.01">
+                        </div>
+                        <div>
+                            <label class="form-label">Boutique Price</label>
+                            <input type="number" id="boutique-price" class="form-input" placeholder="$25.00" step="0.01">
+                        </div>
+                        <div>
+                            <label class="form-label">New Price</label>
+                            <input type="number" id="new-price" class="form-input" placeholder="$45.00" step="0.01">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="button" id="process-btn" class="btn btn-primary">
+                        ✨ Process with AI
+                    </button>
+                    <button type="button" id="download-btn" class="btn btn-secondary" style="display: none;">
+                        📥 Download Image
+                    </button>
+                    <button type="button" id="new-photo-btn" class="btn btn-secondary" style="display: none;">
+                        🆕 New Photo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            // Add your Firebase config here
+            apiKey: "your-api-key",
+            authDomain: "your-project.firebaseapp.com",
+            projectId: "your-project-id",
+            storageBucket: "your-project.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "your-app-id"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+        const functions = firebase.functions();
+
+        // Global variables
+        let currentUser = null;
+        let currentFile = null;
+        let currentImageId = null;
+        let currentListingDoc = null;
+        let listingListener = null;
+
+        // DOM elements
+        const authContainer = document.getElementById('auth-container');
+        const mainContainer = document.getElementById('main-container');
+        const loginBtn = document.getElementById('login-btn');
+        const googleSigninBtn = document.getElementById('google-signin');
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const previewSection = document.getElementById('preview-section');
+        const previewImage = document.getElementById('preview-image');
+        const processingOverlay = document.getElementById('processing-overlay');
+        const statusContainer = document.getElementById('status-container');
+
+        // For A + NO architecture, start without auth
+        // Users can upload immediately, auth comes later for payments
+        currentUser = { uid: 'anonymous' }; // Temporary anonymous user
+        authContainer.style.display = 'none';
+        mainContainer.style.display = 'block';
+        
+        // Auth state observer (for future upgrade to paid plans)
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // Real user signed in - migrate anonymous data if needed
+                currentUser = user;
+                loginBtn.textContent = 'Logout';
+                loginBtn.onclick = () => auth.signOut();
+            } else {
+                // Keep anonymous access for MVP
+                currentUser = { uid: 'anonymous' };
+                loginBtn.textContent = 'Sign Up';
+                loginBtn.onclick = showAuth;
+            }
+        });
+
+        // Show auth
+        function showAuth() {
+            authContainer.style.display = 'block';
+            mainContainer.style.display = 'none';
+        }
+
+        // Google Sign In
+        googleSigninBtn.addEventListener('click', () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).catch((error) => {
+                showStatus('Error signing in: ' + error.message, 'error');
+            });
+        });
+
+        // File upload handling
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        // Handle file selection
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+                showStatus('Please select an image file', 'error');
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                showStatus('File size must be less than 10MB', 'error');
+                return;
+            }
+
+            currentFile = file;
+            currentImageId = generateImageId();
+
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImage.src = e.target.result;
+                previewSection.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+
+            showStatus('Image loaded successfully. Click "Process with AI" to continue.', 'success');
+        }
+
+        // Process image with AI
+        document.getElementById('process-btn').addEventListener('click', async () => {
+            if (!currentFile || !currentUser) return;
+
+            try {
+                showStatus('Uploading and processing image...', 'processing');
+                processingOverlay.style.display = 'flex';
+
+                // Upload to Firebase Storage
+                const uploadPath = `uploads/${currentUser.uid}/${currentImageId}`;
+                const uploadTask = storage.ref(uploadPath).put(currentFile);
+
+                // Monitor upload progress
+                uploadTask.on('state_changed', 
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        showStatus(`Uploading... ${Math.round(progress)}%`, 'processing');
+                    },
+                    (error) => {
+                        showStatus('Upload failed: ' + error.message, 'error');
+                        processingOverlay.style.display = 'none';
+                    },
+                    async () => {
+                        showStatus('Processing with AI...', 'processing');
+                        
+                        // Wait for background removal to complete
+                        await waitForProcessing();
+                    }
+                );
+
+            } catch (error) {
+                showStatus('Processing failed: ' + error.message, 'error');
+                processingOverlay.style.display = 'none';
+            }
+        });
+
+        // Wait for image processing to complete
+        async function waitForProcessing() {
+            const checkStatus = functions.httpsCallable('getImageStatus');
+            let attempts = 0;
+            const maxAttempts = 30; // 30 attempts = 1 minute
+
+            const checkInterval = setInterval(async () => {
+                try {
+                    const result = await checkStatus({
+                        userId: currentUser.uid,
+                        imageId: currentImageId
+                    });
+
+                    if (result.data.status === 'processed') {
+                        clearInterval(checkInterval);
+                        await loadProcessedImage();
+                        processingOverlay.style.display = 'none';
+                        showStatus('Image processed successfully!', 'success');
+                        
+                        // Generate AI content
+                        await generateAIContent();
+                        
+                    } else if (result.data.status === 'error') {
+                        clearInterval(checkInterval);
+                        processingOverlay.style.display = 'none';
+                        showStatus('Processing failed: ' + result.data.error, 'error');
+                    }
+
+                } catch (error) {
+                    attempts++;
+                    if (attempts >= maxAttempts) {
+                        clearInterval(checkInterval);
+                        processingOverlay.style.display = 'none';
+                        showStatus('Processing timeout. Please try again.', 'error');
+                    }
+                }
+            }, 2000); // Check every 2 seconds
+        }
+
+        // Load processed image
+        async function loadProcessedImage() {
+            try {
+                const processedPath = `processed/${currentUser.uid}/${currentImageId}.png`;
+                const processedUrl = await storage.ref(processedPath).getDownloadURL();
+                previewImage.src = processedUrl;
+                
+                document.getElementById('download-btn').style.display = 'inline-flex';
+                document.getElementById('new-photo-btn').style.display = 'inline-flex';
+                
+            } catch (error) {
+                console.error('Error loading processed image:', error);
+            }
+        }
+
+        // Generate AI content (placeholder)
+        async function generateAIContent() {
+            // This would integrate with AI services for title/description generation
+            document.getElementById('title-input').value = 'AI-Generated Product Title';
+            document.getElementById('description-input').value = 'AI-generated product description based on image analysis...';
+            
+            // AI-suggested pricing
+            document.getElementById('thrift-price').value = '8.99';
+            document.getElementById('boutique-price').value = '24.99';
+            document.getElementById('new-price').value = '49.99';
+        }
+
+        // Download processed image
+        document.getElementById('download-btn').addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = `processed-${currentImageId}.png`;
+            link.href = previewImage.src;
+            link.click();
+        });
+
+        // Start over with new photo
+        document.getElementById('new-photo-btn').addEventListener('click', () => {
+            currentFile = null;
+            currentImageId = null;
+            previewSection.style.display = 'none';
+            document.getElementById('listing-form').reset();
+            document.getElementById('download-btn').style.display = 'none';
+            document.getElementById('new-photo-btn').style.display = 'none';
+            statusContainer.innerHTML = '';
+        });
+
+        // Utility functions
+        function generateImageId() {
+            return Date.now().toString() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function showStatus(message, type) {
+            statusContainer.innerHTML = `
+                <div class="status-message status-${type}">
+                    ${message}
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
