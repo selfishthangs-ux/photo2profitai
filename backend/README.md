@@ -62,6 +62,10 @@ curl -sS https://photo2profit-backend-production.up.railway.app/api/founding-cou
 
 - `STRIPE_SECRET_KEY` - Stripe secret key
 
+- `STRIPE_WEBHOOK_SECRET` - Stripe webhook signing secret
+
+- `BASE_URL` - Base URL for redirects after payment (e.g., http://localhost:3000 or https://your-domain.com)
+
 ### Optional Variables
 
 - `PORT` - Server port (default: 3000)
@@ -128,3 +132,51 @@ Health check endpoint.
   "timestamp": "2025-10-24T02:16:23.118Z"
 }
 ```
+
+### GET /api/pricing
+
+Returns all available pricing plans for the $1 trial system.
+
+**Response:**
+```json
+{
+  "plans": {
+    "trial": {
+      "name": "$1 Trial",
+      "price": 100,
+      "credits": 5,
+      "features": ["5 AI-powered listings", ...]
+    },
+    ...
+  },
+  "currency": "USD"
+}
+```
+
+### POST /api/create-checkout-session
+
+Creates a Stripe Checkout session for purchasing credits.
+
+**Request:**
+```json
+{
+  "planKey": "trial",
+  "userId": "user_123"
+}
+```
+
+**Response:**
+```json
+{
+  "sessionId": "cs_test_...",
+  "url": "https://checkout.stripe.com/..."
+}
+```
+
+### POST /api/stripe/webhook
+
+Receives webhook events from Stripe (not called directly by frontend).
+
+## Stripe Integration
+
+For detailed information about setting up Stripe payments, see [STRIPE_SETUP.md](../STRIPE_SETUP.md) in the root directory.

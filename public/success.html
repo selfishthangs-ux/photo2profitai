@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Successful - Photo2Profit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5e6e8 0%, #d5c4c7 100%);
+      min-height: 100vh;
+      color: #2c1810;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .success-container {
+      max-width: 600px;
+      background: white;
+      border-radius: 20px;
+      padding: 60px 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      text-align: center;
+    }
+
+    .success-icon {
+      font-size: 5em;
+      margin-bottom: 20px;
+      animation: bounce 1s ease infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    h1 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 2.5em;
+      color: #4caf50;
+      margin-bottom: 20px;
+    }
+
+    .message {
+      font-size: 1.2em;
+      color: #666;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .credits-info {
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+
+    .credits-info h2 {
+      color: #2e7d32;
+      font-size: 1.5em;
+      margin-bottom: 10px;
+    }
+
+    .credits-info p {
+      color: #1b5e20;
+      font-weight: 600;
+    }
+
+    .button {
+      background: linear-gradient(135deg, #c9a9ae 0%, #b89094 100%);
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      text-decoration: none;
+      display: inline-block;
+      margin: 10px;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(201, 169, 174, 0.4);
+    }
+
+    .button-secondary {
+      background: #f5f5f5;
+      color: #2c1810;
+    }
+
+    .session-id {
+      font-size: 0.8em;
+      color: #999;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="success-container">
+    <div class="success-icon">🎉</div>
+    <h1>Payment Successful!</h1>
+    <p class="message">
+      Thank you for your purchase! Your credits have been added to your account.
+    </p>
+    
+    <div class="credits-info">
+      <h2>Your Credits</h2>
+      <p>You can now start creating AI-powered listings!</p>
+    </div>
+
+    <a href="index.html" class="button">Start Creating Listings</a>
+    <a href="pricing.html" class="button button-secondary">View All Plans</a>
+
+    <div class="session-id" id="sessionInfo"></div>
+  </div>
+
+  <script>
+    // Get session_id from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('session_id');
+    
+    if (sessionId) {
+      document.getElementById('sessionInfo').textContent = `Session ID: ${sessionId}`;
+    }
+  </script>
+</body>
+</html>

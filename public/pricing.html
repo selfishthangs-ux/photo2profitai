@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photo2Profit - Pricing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5e6e8 0%, #d5c4c7 100%);
+      min-height: 100vh;
+      color: #2c1810;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, #c9a9ae 0%, #b89094 100%);
+      border-radius: 20px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    h1 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 3em;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      margin-bottom: 10px;
+    }
+
+    .tagline {
+      font-size: 1.2em;
+      color: #fff;
+      opacity: 0.95;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .pricing-card {
+      background: white;
+      border-radius: 20px;
+      padding: 40px 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    }
+
+    .pricing-card.featured {
+      border: 3px solid #c9a9ae;
+      transform: scale(1.05);
+    }
+
+    .pricing-card.featured::before {
+      content: 'BEST VALUE';
+      position: absolute;
+      top: 20px;
+      right: -35px;
+      background: linear-gradient(135deg, #c9a9ae 0%, #b89094 100%);
+      color: white;
+      padding: 5px 40px;
+      font-size: 0.75em;
+      font-weight: 600;
+      transform: rotate(45deg);
+    }
+
+    .plan-name {
+      font-size: 1.5em;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #2c1810;
+    }
+
+    .plan-description {
+      font-size: 0.9em;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .plan-price {
+      font-size: 3em;
+      font-weight: 700;
+      color: #c9a9ae;
+      margin-bottom: 5px;
+    }
+
+    .plan-price sup {
+      font-size: 0.4em;
+      vertical-align: super;
+    }
+
+    .plan-credits {
+      font-size: 0.9em;
+      color: #666;
+      margin-bottom: 30px;
+      font-weight: 500;
+    }
+
+    .features-list {
+      list-style: none;
+      margin-bottom: 30px;
+      text-align: left;
+    }
+
+    .features-list li {
+      padding: 10px 0;
+      position: relative;
+      padding-left: 30px;
+    }
+
+    .features-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #4caf50;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+
+    .select-plan-btn {
+      width: 100%;
+      padding: 15px 30px;
+      background: linear-gradient(135deg, #c9a9ae 0%, #b89094 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .select-plan-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(201, 169, 174, 0.4);
+    }
+
+    .select-plan-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .trial-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.75em;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      font-size: 1.2em;
+      color: #666;
+    }
+
+    .error {
+      background: #ffebee;
+      color: #c62828;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #2c1810;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 10px 20px;
+      background: white;
+      border-radius: 10px;
+      transition: transform 0.2s ease;
+    }
+
+    .back-link:hover {
+      transform: translateX(-5px);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="index.html" class="back-link">← Back to App</a>
+    
+    <header>
+      <h1>✨ Photo2Profit Pricing</h1>
+      <p class="tagline">Choose the perfect plan for your resale business</p>
+    </header>
+
+    <div id="error-message" class="error" style="display: none;"></div>
+    <div id="loading" class="loading">Loading pricing...</div>
+    <div id="pricing-grid" class="pricing-grid" style="display: none;"></div>
+  </div>
+
+  <script type="module">
+    // Replace with your actual backend URL
+    const BACKEND_URL = 'http://localhost:3000';
+    
+    // Get current user from localStorage (simplified for demo)
+    let currentUserId = localStorage.getItem('userId');
+    if (!currentUserId) {
+      currentUserId = 'user_' + Date.now();
+      localStorage.setItem('userId', currentUserId);
+    }
+
+    async function loadPricing() {
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/pricing`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to load pricing');
+        }
+
+        const data = await response.json();
+        displayPricing(data.plans);
+        
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('pricing-grid').style.display = 'grid';
+      } catch (error) {
+        console.error('Error loading pricing:', error);
+        showError('Failed to load pricing. Please try again later.');
+        document.getElementById('loading').style.display = 'none';
+      }
+    }
+
+    function displayPricing(plans) {
+      const grid = document.getElementById('pricing-grid');
+      grid.innerHTML = '';
+
+      const planKeys = ['trial', 'casual', 'pro', 'boss'];
+      
+      planKeys.forEach(key => {
+        const plan = plans[key];
+        if (!plan) return;
+
+        const isFeatured = key === 'pro';
+        const priceInDollars = (plan.price / 100).toFixed(2);
+
+        const card = document.createElement('div');
+        card.className = `pricing-card ${isFeatured ? 'featured' : ''}`;
+        card.innerHTML = `
+          <div class="plan-name">
+            ${plan.name}
+            ${key === 'trial' ? '<span class="trial-badge">START HERE</span>' : ''}
+          </div>
+          <div class="plan-description">${plan.description}</div>
+          <div class="plan-price">
+            <sup>$</sup>${priceInDollars}
+          </div>
+          <div class="plan-credits">${plan.credits} AI-powered listings</div>
+          <ul class="features-list">
+            ${plan.features.map(feature => `<li>${feature}</li>`).join('')}
+          </ul>
+          <button class="select-plan-btn" onclick="selectPlan('${key}')">
+            ${key === 'trial' ? 'Start $1 Trial' : 'Select Plan'}
+          </button>
+        `;
+        
+        grid.appendChild(card);
+      });
+    }
+
+    window.selectPlan = async function(planKey) {
+      const button = event.target;
+      button.disabled = true;
+      button.textContent = 'Processing...';
+
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/create-checkout-session`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            planKey,
+            userId: currentUserId
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to create checkout session');
+        }
+
+        const data = await response.json();
+        
+        // Redirect to Stripe Checkout
+        window.location.href = data.url;
+      } catch (error) {
+        console.error('Error creating checkout session:', error);
+        showError('Failed to start checkout. Please try again.');
+        button.disabled = false;
+        button.textContent = planKey === 'trial' ? 'Start $1 Trial' : 'Select Plan';
+      }
+    };
+
+    function showError(message) {
+      const errorDiv = document.getElementById('error-message');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      
+      setTimeout(() => {
+        errorDiv.style.display = 'none';
+      }, 5000);
+    }
+
+    // Load pricing on page load
+    loadPricing();
+  </script>
+</body>
+</html>
