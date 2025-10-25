@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 const {
   PRICING_PLANS,
   ensureStripeProducts,
@@ -13,8 +14,28 @@ const {
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Rate limiting configuration
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const strictLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // Limit each IP to 10 requests per windowMs for sensitive endpoints
+  message: 'Too many requests from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 // Middleware
 app.use(cors());
+
+// Apply rate limiting to API routes
+app.use('/api/', apiLimiter);
 
 // Stripe webhook needs raw body
 app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
@@ -51,7 +72,8 @@ app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async
     res.json({ received: true });
   } catch (error) {
     console.error('Webhook error:', error);
-    res.status(400).send(`Webhook Error: ${error.message}`);
+    // Don't expose error details to prevent information leakage
+    res.status(400).send('Webhook Error');
   }
 });
 
@@ -80,7 +102,7 @@ app.get('/api/pricing', (req, res) => {
 });
 
 // Create checkout session
-app.post('/api/create-checkout-session', async (req, res) => {
+app.post('/api/create-checkout-session', strictLimiter, async (req, res) => {
   try {
     const { planKey, userId } = req.body;
 
@@ -118,15 +140,16 @@ app.post('/api/create-checkout-session', async (req, res) => {
     });
   } catch (error) {
     console.error('Error creating checkout session:', error);
+    // Don't expose internal error details
     res.status(500).json({
       error: 'Failed to create checkout session',
-      message: error.message
+      message: 'An error occurred while processing your request'
     });
   }
 });
 
 // Create customer portal session
-app.post('/api/create-portal-session', async (req, res) => {
+app.post('/api/create-portal-session', strictLimiter, async (req, res) => {
   try {
     const { customerId } = req.body;
 
@@ -148,9 +171,10 @@ app.post('/api/create-portal-session', async (req, res) => {
     });
   } catch (error) {
     console.error('Error creating portal session:', error);
+    // Don't expose internal error details
     res.status(500).json({
       error: 'Failed to create portal session',
-      message: error.message
+      message: 'An error occurred while processing your request'
     });
   }
 });
