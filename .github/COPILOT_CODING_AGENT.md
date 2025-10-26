@@ -59,6 +59,8 @@ copilot/fix/<issue-number>-<desc>    # Bug fixes
 copilot/docs/<what>                  # Documentation updates
 copilot/refactor/<module>            # Code refactoring
 copilot/test/<feature>               # Test additions
+copilot/chore/<task>                 # Maintenance, configuration, and planning tasks
+copilot/query/<investigation>        # Investigation, analysis, and query tasks
 ```
 
 ### PR requirements
