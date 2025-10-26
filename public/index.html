@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photo2Profit - Turn Any Photo Into Profit 💰</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5e6e8 0%, #d5c4c7 100%);
+      min-height: 100vh;
+      color: #2c1810;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, #c9a9ae 0%, #b89094 100%);
+      border-radius: 20px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    h1 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 3em;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      margin-bottom: 10px;
+    }
+
+    .tagline {
+      font-size: 1.2em;
+      color: #fff;
+      opacity: 0.95;
+    }
+
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+      h1 {
+        font-size: 2em;
+      }
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .upload-zone {
+      border: 3px dashed #c9a9ae;
+      border-radius: 15px;
+      padding: 60px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .upload-zone:hover {
+      border-color: #b89094;
+      background: rgba(201, 169, 174, 0.05);
+    }
+
+    .upload-zone.dragging {
+      border-color: #b89094;
+      background: rgba(201, 169, 174, 0.1);
+    }
+
+    .upload-icon {
+      font-size: 4em;
+      margin-bottom: 20px;
+    }
+
+    #imagePreview {
+      max-width: 100%;
+      max-height: 400px;
+      border-radius: 10px;
+      display: none;
+      margin: 0 auto;
+    }
+
+    .status-indicator {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      display: none;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .status-uploading {
+      background: #e3f2fd;
+      color: #1976d2;
+    }
+
+    .status-processing {
+      background: #fff3e0;
+      color: #f57c00;
+    }
+
+    .status-ai-generating {
+      background: #f3e5f5;
+      color: #7b1fa2;
+    }
+
+    .status-complete {
+      background: #e8f5e9;
+      color: #388e3c;
+      animation: none;
+    }
+
+    .status-error {
+      background: #ffebee;
+      color: #c62828;
+      animation: none;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #2c1810;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #c9a9ae;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .pricing-tiers {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .pricing-tier {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .pricing-tier label {
+      font-size: 0.9em;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    .pricing-tier input {
+      font-size: 1.2em;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .button {
+      background: linear-gradient(135deg, #c9a9ae 0%, #b89094 100%);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(201, 169, 174, 0.4);
+    }
+
+    .button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .button-secondary {
+      background: #f5f5f5;
+      color: #2c1810;
+    }
+
+    .shimmer {
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .ai-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+
+    #auth-section {
+      text-align: center;
+      padding: 20px;
+    }
+
+    #app-section {
+      display: none;
+    }
+
+    .sign-out {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .sign-out:hover {
+      background: rgba(255,255,255,0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Auth Section -->
+    <div id="auth-section">
+      <header>
+        <h1>✨ Photo2Profit AI</h1>
+        <p class="tagline">Turn Any Photo Into Profit in 60 Seconds</p>
+      </header>
+      <div class="card" style="max-width: 500px; margin: 0 auto;">
+        <h2 style="text-align: center; margin-bottom: 20px;">Get Started</h2>
+        <button id="googleSignIn" class="button">
+          Sign in with Google
+        </button>
+        <p style="text-align: center; margin-top: 20px; font-size: 0.9em; color: #666;">
+          or continue as guest (limited features)
+        </p>
+        <button id="continueAsGuest" class="button button-secondary">
+          Continue Without Account
+        </button>
+      </div>
+    </div>
+
+    <!-- App Section -->
+    <div id="app-section">
+      <header style="position: relative;">
+        <h1>✨ Photo2Profit AI</h1>
+        <p class="tagline">Turn Any Photo Into Profit in 60 Seconds</p>
+        <button id="signOut" class="sign-out" style="display: none;">Sign Out</button>
+      </header>
+
+      <div class="main-content">
+        <!-- Upload Section -->
+        <div class="card">
+          <h2>1. Upload Your Photo</h2>
+          <div id="uploadZone" class="upload-zone">
+            <div class="upload-icon">📸</div>
+            <p><strong>Drop your photo here</strong></p>
+            <p style="color: #666; margin-top: 10px;">or click to browse</p>
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+          </div>
+          <img id="imagePreview" alt="Preview">
+          
+          <div id="statusIndicator" class="status-indicator"></div>
+        </div>
+
+        <!-- Listing Form -->
+        <div class="card">
+          <h2>2. AI-Generated Listing <span class="ai-badge">✨ AI Powered</span></h2>
+          
+          <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category">
+              <option value="">Select category...</option>
+              <option value="clothing">Clothing</option>
+              <option value="shoes">Shoes</option>
+              <option value="bags">Bags</option>
+              <option value="accessories">Accessories</option>
+              <option value="jewelry">Jewelry</option>
+              <option value="electronics">Electronics</option>
+              <option value="home">Home Decor</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="condition">Condition</label>
+            <select id="condition">
+              <option value="">Select condition...</option>
+              <option value="new">New with Tags</option>
+              <option value="like_new">Like New</option>
+              <option value="good">Good</option>
+              <option value="fair">Fair</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" placeholder="AI will generate compelling title...">
+          </div>
+
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" placeholder="AI will write your listing description..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>AI Pricing Recommendations</label>
+            <div class="pricing-tiers">
+              <div class="pricing-tier">
+                <label>Thrift Price</label>
+                <input type="number" id="priceThrift" placeholder="$0">
+              </div>
+              <div class="pricing-tier">
+                <label>Boutique Price</label>
+                <input type="number" id="priceBoutique" placeholder="$0">
+              </div>
+              <div class="pricing-tier">
+                <label>New Price</label>
+                <input type="number" id="priceNew" placeholder="$0">
+              </div>
+            </div>
+          </div>
+
+          <button id="saveDraft" class="button" disabled>Save Draft</button>
+          <button id="exportListing" class="button button-secondary" disabled>Export Listing</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+    import { getFirestore, doc, setDoc, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+    import { getStorage, ref, uploadBytes } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js';
+
+    // Firebase config - REPLACE WITH YOUR VALUES
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    let currentUser = null;
+    let currentItemId = null;
+    let unsubscribeListing = null;
+
+    // Auth state listener
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUser = user;
+        document.getElementById('auth-section').style.display = 'none';
+        document.getElementById('app-section').style.display = 'block';
+        
+        if (!user.isAnonymous) {
+          document.getElementById('signOut').style.display = 'block';
+        }
+      } else {
+        currentUser = null;
+        document.getElementById('auth-section').style.display = 'block';
+        document.getElementById('app-section').style.display = 'none';
+      }
+    });
+
+    // Sign in with Google
+    document.getElementById('googleSignIn').addEventListener('click', async () => {
+      const provider = new GoogleAuthProvider();
+      try {
+        await signInWithPopup(auth, provider);
+      } catch (error) {
+        console.error('Sign in error:', error);
+        alert('Sign in failed: ' + error.message);
+      }
+    });
+
+    // Continue as guest
+    document.getElementById('continueAsGuest').addEventListener('click', async () => {
+      try {
+        await signInAnonymously(auth);
+      } catch (error) {
+        console.error('Anonymous sign in error:', error);
+        alert('Failed to continue: ' + error.message);
+      }
+    });
+
+    // Sign out
+    document.getElementById('signOut').addEventListener('click', async () => {
+      await signOut(auth);
+    });
+
+    // Upload zone
+    const uploadZone = document.getElementById('uploadZone');
+    const fileInput = document.getElementById('fileInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const statusIndicator = document.getElementById('statusIndicator');
+
+    uploadZone.addEventListener('click', () => fileInput.click());
+
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('dragging');
+    });
+
+    uploadZone.addEventListener('dragleave', () => {
+      uploadZone.classList.remove('dragging');
+    });
+
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragging');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        handleImageUpload(file);
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        handleImageUpload(file);
+      }
+    });
+
+    async function handleImageUpload(file) {
+      if (!currentUser) {
+        alert('Please sign in first');
+        return;
+      }
+
+      // Generate item ID
+      currentItemId = Date.now().toString();
+
+      // Show preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        imagePreview.src = e.target.result;
+        imagePreview.style.display = 'block';
+        uploadZone.style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+
+      // Update status
+      showStatus('uploading', '📤 Uploading your photo...');
+
+      try {
+        // Upload to Firebase Storage
+        const storageRef = ref(storage, `uploads/${currentUser.uid}/${currentItemId}`);
+        await uploadBytes(storageRef, file);
+
+        // Create initial Firestore document
+        const listingRef = doc(db, `users/${currentUser.uid}/listings/${currentItemId}`);
+        await setDoc(listingRef, {
+          userId: currentUser.uid,
+          itemId: currentItemId,
+          status: 'uploaded',
+          createdAt: serverTimestamp()
+        });
+
+        // Start listening for updates
+        listenToListing();
+
+        showStatus('processing', '✂️ Removing background...');
+
+      } catch (error) {
+        console.error('Upload error:', error);
+        showStatus('error', '❌ Upload failed: ' + error.message);
+      }
+    }
+
+    function listenToListing() {
+      if (unsubscribeListing) {
+        unsubscribeListing();
+      }
+
+      const listingRef = doc(db, `users/${currentUser.uid}/listings/${currentItemId}`);
+      
+      unsubscribeListing = onSnapshot(listingRef, (doc) => {
+        if (!doc.exists()) return;
+        
+        const data = doc.data();
+        console.log('Listing updated:', data);
+
+        // Update status
+        if (data.status === 'background_removed') {
+          showStatus('ai-generating', '✨ AI is writing your listing...');
+        } else if (data.status === 'ai_complete') {
+          showStatus('complete', '🎉 Listing ready! Check your form →');
+          
+          // Auto-fill form with AI data
+          if (data.ai) {
+            fillFormWithAI(data.ai);
+          }
+          
+          // Enable buttons
+          document.getElementById('saveDraft').disabled = false;
+          document.getElementById('exportListing').disabled = false;
+        } else if (data.status === 'error' || data.status === 'ai_error') {
+          showStatus('error', '❌ Processing failed: ' + (data.error || 'Unknown error'));
+        }
+      });
+    }
+
+    function showStatus(type, message) {
+      statusIndicator.className = `status-indicator status-${type}`;
+      statusIndicator.textContent = message;
+      statusIndicator.style.display = 'block';
+      
+      if (type === 'processing' || type === 'ai-generating') {
+        statusIndicator.classList.add('shimmer');
+      }
+    }
+
+    function fillFormWithAI(aiData) {
+      if (aiData.category) document.getElementById('category').value = aiData.category;
+      if (aiData.condition) document.getElementById('condition').value = aiData.condition;
+      if (aiData.title) document.getElementById('title').value = aiData.title;
+      if (aiData.description) document.getElementById('description').value = aiData.description;
+      
+      if (aiData.pricing) {
+        if (aiData.pricing.thrift) document.getElementById('priceThrift').value = aiData.pricing.thrift;
+        if (aiData.pricing.boutique) document.getElementById('priceBoutique').value = aiData.pricing.boutique;
+        if (aiData.pricing.new) document.getElementById('priceNew').value = aiData.pricing.new;
+      }
+    }
+
+    // Save draft
+    document.getElementById('saveDraft').addEventListener('click', async () => {
+      if (!currentUser || !currentItemId) return;
+
+      const listingRef = doc(db, `users/${currentUser.uid}/listings/${currentItemId}`);
+      
+      try {
+        await setDoc(listingRef, {
+          userEdits: {
+            category: document.getElementById('category').value,
+            condition: document.getElementById('condition').value,
+            title: document.getElementById('title').value,
+            description: document.getElementById('description').value,
+            pricing: {
+              thrift: parseFloat(document.getElementById('priceThrift').value) || 0,
+              boutique: parseFloat(document.getElementById('priceBoutique').value) || 0,
+              new: parseFloat(document.getElementById('priceNew').value) || 0
+            }
+          },
+          lastModified: serverTimestamp()
+        }, { merge: true });
+
+        alert('✅ Draft saved!');
+      } catch (error) {
+        console.error('Save error:', error);
+        alert('Failed to save: ' + error.message);
+      }
+    });
+
+    // Export listing
+    document.getElementById('exportListing').addEventListener('click', () => {
+      const listing = {
+        title: document.getElementById('title').value,
+        description: document.getElementById('description').value,
+        category: document.getElementById('category').value,
+        condition: document.getElementById('condition').value,
+        pricing: {
+          thrift: document.getElementById('priceThrift').value,
+          boutique: document.getElementById('priceBoutique').value,
+          new: document.getElementById('priceNew').value
+        }
+      };
+
+      const blob = new Blob([JSON.stringify(listing, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `listing-${currentItemId}.json`;
+      a.click();
+    });
+  </script>
+</body>
+</html>
