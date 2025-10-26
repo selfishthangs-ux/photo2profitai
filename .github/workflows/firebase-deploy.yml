@@ -50,6 +50,17 @@ jobs:
             echo "❌ Error: FIREBASE_SERVICE_ACCOUNT is not a valid service account JSON. Expected keys: type=service_account, client_email, private_key, project_id";
             rm -f sa.json; exit 1;
           fi
+          # Print safe debug info to help IAM setup (email and project id only)
+          CLIENT_EMAIL=$(jq -r '.client_email' sa.json)
+          SA_PROJECT_ID=$(jq -r '.project_id' sa.json)
+          echo "::notice title=Service account used::client_email=$CLIENT_EMAIL, project_id=$SA_PROJECT_ID"
+
+          # Compare against intended PROJECT_ID to catch mismatches early
+          EXPECTED_PID='${{ secrets.FIREBASE_PROJECT_ID }}'
+          if [ -z "$EXPECTED_PID" ]; then EXPECTED_PID='photo2profitai-24443056'; fi
+          if [ "$SA_PROJECT_ID" != "$EXPECTED_PID" ]; then
+            echo "::warning title=Project ID mismatch::Service account JSON project_id=$SA_PROJECT_ID differs from intended PROJECT_ID=$EXPECTED_PID. Ensure IAM roles are granted on the intended project OR update secrets accordingly."
+          fi
           rm -f sa.json
           echo "✅ Service account JSON looks valid"
 
