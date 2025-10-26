@@ -2,6 +2,22 @@
 
 Photo2Profit is a next-generation AI resale tool that transforms any photo into a ready-to-sell product listing. Built for creators, thrifters, and e-commerce entrepreneurs, it uses advanced AI to identify products, clean images, suggest optimized prices, and generate listings that sell themselves.
 
+## 🔥 Firebase Deployment
+
+### Quick Status
+✅ Firebase configuration files added  
+✅ VSCode workspace settings configured  
+✅ Automated deployment workflow ready  
+
+**For detailed deployment instructions, see:**
+- [FIREBASE_DEPLOYMENT_FIXES.md](FIREBASE_DEPLOYMENT_FIXES.md) - Complete fix documentation
+- [CHECKLIST.md](CHECKLIST.md) - Step-by-step deployment checklist
+
+### Deploy Now
+1. Add Firebase secrets to GitHub (see CHECKLIST.md)
+2. Push to main branch or manually trigger deployment
+3. Your site will be live at: https://photo2profit-ai.web.app
+
 ## Backend Setup
 
 The backend service provides API endpoints for the Photo2Profit application.
