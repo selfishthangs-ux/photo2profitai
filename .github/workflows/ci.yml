@@ -204,7 +204,7 @@ jobs:
           branch_name="${{ github.head_ref }}"
           echo "🤖 Validating Copilot agent branch: $branch_name"
 
-          if [[ $branch_name =~ ^copilot/(feat|fix|docs|refactor|test|chore|query)/.+ ]] || [[ $branch_name =~ ^copilot/[a-z][a-z0-9-]* ]]; then
+          if [[ $branch_name =~ ^copilot/(feat|fix|docs|refactor|test|chore|query)/.+ ]] || [[ $branch_name =~ ^copilot/[a-z][a-z0-9-]{2,} ]]; then
             echo "✅ Branch name follows conventions"
           else
             echo "❌ Branch name should follow pattern: copilot/{feat|fix|docs|refactor|test|chore|query}/<description> or copilot/<description>"
