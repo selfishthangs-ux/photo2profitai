@@ -2,222 +2,229 @@ name: Code Quality and Security Checks
 
 on:
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
   push:
-    branches: [ main ]
+    branches: [main]
+
+permissions:
+  contents: read
+  security-events: write
 
 jobs:
   # Basic validation for any repository type
   validation:
     runs-on: ubuntu-latest
     name: Basic Validation
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Check for secrets in code
-      run: |
-        echo "🔍 Checking for potential secrets..."
-        # Look for common secret patterns
-        if grep -r -E "(api[_-]?key|secret[_-]?key|password|token)" --include="*.py" --include="*.js" --include="*.ts" --include="*.json" --include="*.yaml" --include="*.yml" . || true; then
-          echo "⚠️  Potential secrets detected. Please review manually."
-        else
-          echo "✅ No obvious secrets detected"
-        fi
-        
-    - name: Check file sizes
-      run: |
-        echo "📁 Checking for large files..."
-        find . -type f -size +10M -not -path "./.git/*" | while read file; do
-          echo "⚠️  Large file detected: $file ($(du -h "$file" | cut -f1))"
-        done || echo "✅ No large files detected"
-        
-    - name: Validate markdown files
-      run: |
-        echo "📝 Validating markdown files..."
-        # Basic markdown validation - check for common issues
-        for file in $(find . -name "*.md" -not -path "./.git/*"); do
-          if [ -f "$file" ]; then
-            echo "Checking $file..."
-            # Check for broken internal links (basic check)
-            if grep -q "\[.*\](\./" "$file"; then
-              echo "✅ Internal links found in $file"
-            fi
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for secrets in code
+        run: |
+          echo "🔍 Checking for potential secrets..."
+          # Look for common secret patterns
+          if grep -r -E "(api[_-]?key|secret[_-]?key|password|token)" --include="*.py" --include="*.js" --include="*.ts" --include="*.json" --include="*.yaml" --include="*.yml" . || true; then
+            echo "⚠️  Potential secrets detected. Please review manually."
+          else
+            echo "✅ No obvious secrets detected"
           fi
-        done
-        echo "✅ Markdown validation complete"
+
+      - name: Check file sizes
+        run: |
+          echo "📁 Checking for large files..."
+          find . -type f -size +10M -not -path "./.git/*" | while read file; do
+            echo "⚠️  Large file detected: $file ($(du -h "$file" | cut -f1))"
+          done || echo "✅ No large files detected"
+
+      - name: Validate markdown files
+        run: |
+          echo "📝 Validating markdown files..."
+          # Basic markdown validation - check for common issues
+          for file in $(find . -name "*.md" -not -path "./.git/*"); do
+            if [ -f "$file" ]; then
+              echo "Checking $file..."
+              # Check for broken internal links (basic check)
+              if grep -q "\[.*\](\./" "$file"; then
+                echo "✅ Internal links found in $file"
+              fi
+            fi
+          done
+          echo "✅ Markdown validation complete"
 
   # Language-specific checks (activated when relevant files are detected)
   python-checks:
     runs-on: ubuntu-latest
     name: Python Quality Checks
     if: contains(github.event.head_commit.message, 'python') || contains(github.event.pull_request.title, 'python') || github.event_name == 'push'
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Check for Python files
-      id: check-python
-      run: |
-        if find . -name "*.py" -not -path "./.git/*" | grep -q .; then
-          echo "python_files=true" >> $GITHUB_OUTPUT
-          echo "🐍 Python files detected"
-        else
-          echo "python_files=false" >> $GITHUB_OUTPUT
-          echo "ℹ️  No Python files detected"
-        fi
-        
-    - name: Set up Python
-      if: steps.check-python.outputs.python_files == 'true'
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
-        
-    - name: Install Python linting tools
-      if: steps.check-python.outputs.python_files == 'true'
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 black isort
-        
-    - name: Run Python linting
-      if: steps.check-python.outputs.python_files == 'true'
-      run: |
-        echo "🔍 Running Python linting..."
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || echo "⚠️  Linting issues found"
-        
-    - name: Check Python formatting
-      if: steps.check-python.outputs.python_files == 'true'
-      run: |
-        echo "🎨 Checking Python formatting..."
-        black --check . || echo "⚠️  Formatting issues found"
-        
-    - name: Run Python tests
-      if: steps.check-python.outputs.python_files == 'true'
-      run: |
-        echo "🧪 Looking for Python tests..."
-        if find . -name "test_*.py" -o -name "*_test.py" | grep -q .; then
-          echo "Running pytest..."
-          pip install pytest
-          pytest || echo "⚠️  Some tests failed"
-        else
-          echo "ℹ️  No Python tests detected"
-        fi
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for Python files
+        id: check-python
+        run: |
+          if find . -name "*.py" -not -path "./.git/*" | grep -q .; then
+            echo "python_files=true" >> $GITHUB_OUTPUT
+            echo "🐍 Python files detected"
+          else
+            echo "python_files=false" >> $GITHUB_OUTPUT
+            echo "ℹ️  No Python files detected"
+          fi
+
+      - name: Set up Python
+        if: steps.check-python.outputs.python_files == 'true'
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install Python linting tools
+        if: steps.check-python.outputs.python_files == 'true'
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 black isort
+
+      - name: Run Python linting
+        if: steps.check-python.outputs.python_files == 'true'
+        run: |
+          echo "🔍 Running Python linting..."
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || echo "⚠️  Linting issues found"
+
+      - name: Check Python formatting
+        if: steps.check-python.outputs.python_files == 'true'
+        run: |
+          echo "🎨 Checking Python formatting..."
+          black --check . || echo "⚠️  Formatting issues found"
+
+      - name: Run Python tests
+        if: steps.check-python.outputs.python_files == 'true'
+        run: |
+          echo "🧪 Looking for Python tests..."
+          if find . -name "test_*.py" -o -name "*_test.py" | grep -q .; then
+            echo "Running pytest..."
+            pip install pytest
+            pytest || echo "⚠️  Some tests failed"
+          else
+            echo "ℹ️  No Python tests detected"
+          fi
 
   nodejs-checks:
     runs-on: ubuntu-latest
     name: Node.js Quality Checks
     if: contains(github.event.head_commit.message, 'node') || contains(github.event.pull_request.title, 'node') || github.event_name == 'push'
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Check for Node.js files
-      id: check-nodejs
-      run: |
-        if find . -name "package.json" -o -name "*.js" -o -name "*.ts" | grep -q .; then
-          echo "nodejs_files=true" >> $GITHUB_OUTPUT
-          echo "📦 Node.js files detected"
-        else
-          echo "nodejs_files=false" >> $GITHUB_OUTPUT
-          echo "ℹ️  No Node.js files detected"
-        fi
-        
-    - name: Set up Node.js
-      if: steps.check-nodejs.outputs.nodejs_files == 'true'
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        
-    - name: Install dependencies
-      if: steps.check-nodejs.outputs.nodejs_files == 'true'
-      run: |
-        if [ -f "package.json" ]; then
-          npm ci || npm install
-        fi
-        
-    - name: Run linting
-      if: steps.check-nodejs.outputs.nodejs_files == 'true'
-      run: |
-        if [ -f "package.json" ] && npm run lint --silent; then
-          echo "🔍 Running ESLint..."
-          npm run lint
-        else
-          echo "ℹ️  No lint script found in package.json"
-        fi
-        
-    - name: Run tests
-      if: steps.check-nodejs.outputs.nodejs_files == 'true'
-      run: |
-        if [ -f "package.json" ] && npm run test --silent; then
-          echo "🧪 Running tests..."
-          npm test
-        else
-          echo "ℹ️  No test script found in package.json"
-        fi
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for Node.js files
+        id: check-nodejs
+        run: |
+          if find . -name "package.json" -o -name "*.js" -o -name "*.ts" | grep -q .; then
+            echo "nodejs_files=true" >> $GITHUB_OUTPUT
+            echo "📦 Node.js files detected"
+          else
+            echo "nodejs_files=false" >> $GITHUB_OUTPUT
+            echo "ℹ️  No Node.js files detected"
+          fi
+
+      - name: Set up Node.js
+        if: steps.check-nodejs.outputs.nodejs_files == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        if: steps.check-nodejs.outputs.nodejs_files == 'true'
+        run: |
+          if [ -f "package.json" ]; then
+            npm ci || npm install
+          fi
+
+      - name: Run linting
+        if: steps.check-nodejs.outputs.nodejs_files == 'true'
+        run: |
+          if [ -f "package.json" ] && npm run lint --silent; then
+            echo "🔍 Running ESLint..."
+            npm run lint
+          else
+            echo "ℹ️  No lint script found in package.json"
+          fi
+
+      - name: Run tests
+        if: steps.check-nodejs.outputs.nodejs_files == 'true'
+        run: |
+          if [ -f "package.json" ] && npm run test --silent; then
+            echo "🧪 Running tests..."
+            npm test
+          else
+            echo "ℹ️  No test script found in package.json"
+          fi
 
   # Security scanning
   security:
     runs-on: ubuntu-latest
     name: Security Scan
-    
+    permissions:
+      contents: read
+      security-events: write
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@master
-      with:
-        scan-type: 'fs'
-        scan-ref: '.'
-        format: 'sarif'
-        output: 'trivy-results.sarif'
-        
-    - name: Upload Trivy scan results to GitHub Security tab
-      uses: github/codeql-action/upload-sarif@v3
-      if: always()
-      with:
-        sarif_file: 'trivy-results.sarif'
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          format: "sarif"
+          output: "trivy-results.sarif"
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: "trivy-results.sarif"
 
   # Copilot agent PR validation
   copilot-validation:
     runs-on: ubuntu-latest
     name: Copilot Agent Validation
     if: contains(github.head_ref, 'copilot/') || contains(github.event.pull_request.user.login, 'github-actions')
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Validate copilot branch naming
-      if: contains(github.head_ref, 'copilot/')
-      run: |
-        branch_name="${{ github.head_ref }}"
-        echo "🤖 Validating Copilot agent branch: $branch_name"
-        
-        if [[ $branch_name =~ ^copilot/(feat|fix|docs|refactor|test)/.+ ]]; then
-          echo "✅ Branch name follows conventions"
-        else
-          echo "❌ Branch name should follow pattern: copilot/{feat|fix|docs|refactor|test}/<description>"
-          exit 1
-        fi
-        
-    - name: Check for agent checklist in PR
-      if: github.event_name == 'pull_request'
-      run: |
-        echo "📋 Checking for agent checklist in PR description..."
-        # This would need to be implemented with GitHub API calls
-        echo "ℹ️  Manual review required for agent checklist"
-        
-    - name: Validate no protected files modified
-      run: |
-        echo "🔒 Checking for modifications to protected files..."
-        protected_files=(".github/workflows/" ".github/CODEOWNERS" "package.json" "requirements.txt")
-        
-        for file in "${protected_files[@]}"; do
-          if git diff --name-only origin/main | grep -q "^$file"; then
-            echo "⚠️  Protected file modified: $file - requires maintainer review"
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate copilot branch naming
+        if: contains(github.head_ref, 'copilot/')
+        run: |
+          branch_name="${{ github.head_ref }}"
+          echo "🤖 Validating Copilot agent branch: $branch_name"
+
+          if [[ $branch_name =~ ^copilot/(feat|fix|docs|refactor|test)/.+ ]]; then
+            echo "✅ Branch name follows conventions"
+          else
+            echo "❌ Branch name should follow pattern: copilot/{feat|fix|docs|refactor|test}/<description>"
+            exit 1
           fi
-        done
+
+      - name: Check for agent checklist in PR
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "📋 Checking for agent checklist in PR description..."
+          # This would need to be implemented with GitHub API calls
+          echo "ℹ️  Manual review required for agent checklist"
+
+      - name: Validate no protected files modified
+        run: |
+          echo "🔒 Checking for modifications to protected files..."
+          protected_files=(".github/workflows/" ".github/CODEOWNERS" "package.json" "requirements.txt")
+
+          for file in "${protected_files[@]}"; do
+            if git diff --name-only origin/main | grep -q "^$file"; then
+              echo "⚠️  Protected file modified: $file - requires maintainer review"
+            fi
+          done
