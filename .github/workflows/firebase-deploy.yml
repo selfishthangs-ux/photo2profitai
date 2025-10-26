@@ -6,10 +6,16 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     name: Deploy to Firebase
+    permissions:
+      contents: read
+      id-token: write
     
     steps:
       - name: Checkout code
