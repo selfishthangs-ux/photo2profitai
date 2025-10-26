@@ -13,16 +13,16 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-      
+          node-version: "20"
+
       - name: Verify public directory exists
         run: |
           if [ ! -d "public" ]; then
@@ -34,13 +34,32 @@ jobs:
             exit 1
           fi
           echo "✅ Public directory and index.html verified"
-      
+
+      - name: Validate Firebase service account secret
+        run: |
+          if [ -z "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" ]; then
+            echo "❌ Error: FIREBASE_SERVICE_ACCOUNT secret is missing";
+            exit 1;
+          fi
+          # Write the secret to a temporary file without printing it
+          SA_JSON='${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+          # Preserve newlines and content exactly
+          printf '%s' "$SA_JSON" > sa.json
+          # Validate expected JSON structure
+          if ! jq -e '.type == "service_account" and has("client_email") and has("private_key") and has("project_id")' sa.json > /dev/null; then
+            echo "❌ Error: FIREBASE_SERVICE_ACCOUNT is not a valid service account JSON. Expected keys: type=service_account, client_email, private_key, project_id";
+            rm -f sa.json
+            exit 1;
+          fi
+          rm -f sa.json
+          echo "✅ Service account JSON looks valid"
+
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
-          projectId: '${{ secrets.FIREBASE_PROJECT_ID }}'
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
+          projectId: "${{ secrets.FIREBASE_PROJECT_ID }}"
           channelId: live
         env:
           FIREBASE_CLI_EXPERIMENTS: webframeworks
