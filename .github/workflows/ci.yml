@@ -200,7 +200,7 @@ jobs:
         if [[ $branch_name =~ ^copilot/(feat|fix|docs|refactor|test)[/-].+ ]]; then
           echo "✅ Branch name follows conventions"
         else
-          echo "❌ Branch name should follow pattern: copilot/{feat|fix|docs|refactor|test}/description or copilot/{feat|fix|docs|refactor|test}-description"
+          echo "❌ Branch name should follow pattern: copilot/{feat|fix|docs|refactor|test}/{description} or copilot/{feat|fix|docs|refactor|test}-{description}"
           exit 1
         fi
         
