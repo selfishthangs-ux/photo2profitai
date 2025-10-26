@@ -69,9 +69,13 @@ Configured for optimal development experience:
 ### Prerequisites
 You must add these secrets to GitHub:
 1. Go to: https://github.com/selfishthangs-ux/photo2profitai/settings/secrets/actions
-2. Add the following secrets:
+2. Generate a Firebase service account JSON (see [CHECKLIST.md](CHECKLIST.md) Step 2)
+3. **⚠️ IMPORTANT**: Grant IAM roles to the service account (see [FIREBASE_IAM_SETUP.md](FIREBASE_IAM_SETUP.md))
+4. Add the following secrets:
    - `FIREBASE_SERVICE_ACCOUNT` - Firebase service account JSON
    - `FIREBASE_PROJECT_ID` - Your Firebase project ID (e.g., `photo2profit-ai`)
+
+**📖 For detailed IAM setup and permissions, see [FIREBASE_IAM_SETUP.md](FIREBASE_IAM_SETUP.md)**
 
 ### Manual Deployment
 ```bash
