@@ -78,6 +78,7 @@ docs(readme): update installation instructions
 test(auth): add unit tests for login flow
 refactor(utils): simplify date formatting logic
 chore(deps): update security dependencies
+query(analysis): investigate performance bottleneck
 ```
 
 ## Testing & validation requirements
