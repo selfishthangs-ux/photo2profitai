@@ -20,7 +20,7 @@
 **Solution:** Added complete Firebase configuration:
 
 **Files Added:**
-- `firebase.json` - Main Firebase configuration for hosting, Firestore, Storage, and Functions
+- `firebase.json` - Main Firebase configuration for hosting, Firestore, and Storage
 - `.firebaserc` - Project ID configuration (defaults to `photo2profit-ai`)
 - `firestore.rules` - Security rules for Firestore database
 - `firestore.indexes.json` - Database indexes configuration
