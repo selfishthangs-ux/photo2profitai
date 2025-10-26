@@ -1,0 +1,43 @@
+name: Deploy to Firebase Hosting
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to Firebase
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Verify public directory exists
+        run: |
+          if [ ! -d "public" ]; then
+            echo "❌ Error: public directory not found"
+            exit 1
+          fi
+          if [ ! -f "public/index.html" ]; then
+            echo "❌ Error: public/index.html not found"
+            exit 1
+          fi
+          echo "✅ Public directory and index.html verified"
+      
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+          projectId: '${{ secrets.FIREBASE_PROJECT_ID }}'
+          channelId: live
+        env:
+          FIREBASE_CLI_EXPERIMENTS: webframeworks
