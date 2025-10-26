@@ -2,14 +2,6 @@
 
 Photo2Profit is a next-generation AI resale tool that transforms any photo into a ready-to-sell product listing. Built for creators, thrifters, and e-commerce entrepreneurs, it uses advanced AI to identify products, clean images, suggest optimized prices, and generate listings that sell themselves.
 
-## 🗺️ What's Next?
-
-**New to the project?** Check out [WHATS_NEXT.md](WHATS_NEXT.md) for:
-- 📊 Current project status
-- 🎯 Immediate priorities (AI features, user flow)
-- 📋 Short and long-term roadmap
-- 🚀 How to contribute and where to start
-
 ## 🔥 Firebase Deployment
 
 ### Quick Status
