@@ -4,22 +4,38 @@ Photo2Profit is a next-generation AI resale tool that transforms any photo into 
 
 ## 🔥 Firebase Deployment
 
+### 🎯 Just Granted IAM Access? Start Here!
+👉 **[DEPLOYMENT_SUMMARY.md](DEPLOYMENT_SUMMARY.md)** - What to do after granting access
+
 ### Quick Status
 ✅ Firebase configuration files added  
 ✅ VSCode workspace settings configured  
 ✅ Automated deployment workflow ready  
+✅ **IAM setup documentation complete**
 
-**For detailed deployment instructions, see:**
-- [CHECKLIST.md](CHECKLIST.md) - Step-by-step deployment checklist (START HERE)
-- [FIREBASE_IAM_SETUP.md](FIREBASE_IAM_SETUP.md) - **IAM roles and permissions setup** ⚠️ IMPORTANT
-- [FIREBASE_DEPLOYMENT_FIXES.md](FIREBASE_DEPLOYMENT_FIXES.md) - Complete fix documentation
+### 📚 Documentation Guides
 
-### Deploy Now
+**Getting Started (Pick One):**
+- 🚀 **[QUICK_START.md](QUICK_START.md)** - 15-minute deployment guide (START HERE)
+- 📋 **[CHECKLIST.md](CHECKLIST.md)** - Complete step-by-step checklist
+- 📊 **[DEPLOYMENT_STATUS_CHECK.md](DEPLOYMENT_STATUS_CHECK.md)** - Verify your setup
+
+**Important References:**
+- ⚠️ **[FIREBASE_IAM_SETUP.md](FIREBASE_IAM_SETUP.md)** - **IAM roles configuration** (CRITICAL)
+- 🔧 **[FIREBASE_DEPLOYMENT_FIXES.md](FIREBASE_DEPLOYMENT_FIXES.md)** - Troubleshooting guide
+- 📝 **[DEPLOYMENT_SUMMARY.md](DEPLOYMENT_SUMMARY.md)** - What was fixed and next steps
+
+### Deploy Now (5 Steps)
 1. Create Firebase project and generate service account JSON
-2. **Grant IAM roles to service account** (see [FIREBASE_IAM_SETUP.md](FIREBASE_IAM_SETUP.md))
-3. Add Firebase secrets to GitHub (see [CHECKLIST.md](CHECKLIST.md))
-4. Push to main branch or manually trigger deployment
+2. **⚠️ Grant IAM roles to service account** → See [FIREBASE_IAM_SETUP.md](FIREBASE_IAM_SETUP.md)
+3. Add Firebase secrets to GitHub → See [QUICK_START.md](QUICK_START.md)
+4. Trigger deployment (push to main or run workflow)
 5. Your site will be live at: https://photo2profit-ai.web.app
+
+### Common Issues
+- **Permission denied**: IAM roles not granted → [FIREBASE_IAM_SETUP.md](FIREBASE_IAM_SETUP.md)
+- **Secret missing**: GitHub secrets not set → [QUICK_START.md](QUICK_START.md)
+- **Site not found**: Wait 2-3 minutes for DNS → [FIREBASE_DEPLOYMENT_FIXES.md](FIREBASE_DEPLOYMENT_FIXES.md)
 
 ## Backend Setup
 
