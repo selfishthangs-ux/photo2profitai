@@ -906,6 +906,10 @@
       }
     }
 
+    // Expose functions to global scope for inline event handlers
+    window.closeUpgradeModal = closeUpgradeModal;
+    window.selectPlan = selectPlan;
+
     function updateCreditsDisplay() {
       // Update header to show remaining credits
       const header = document.querySelector('#app-section header .tagline');
