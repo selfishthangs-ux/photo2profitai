@@ -44,6 +44,30 @@
 - [ ] Download JSON file (keep it safe!)
 - [ ] Note: This file contains sensitive credentials
 
+### ⚠️ IMPORTANT: Grant IAM Roles to Service Account
+
+After downloading the service account JSON, you MUST grant it the necessary permissions:
+
+- [ ] **Option A (Recommended)**: Grant Firebase Admin role
+  1. In Firebase Console → Project Settings → Service Accounts
+  2. Click "Manage service account permissions in Google Cloud Console"
+  3. Find your service account (ends with `@photo2profit-ai.iam.gserviceaccount.com`)
+  4. Click ✏️ (edit) → "+ ADD ANOTHER ROLE"
+  5. Add role: **"Firebase Admin"** (`roles/firebase.admin`)
+  6. Click "Save"
+
+- [ ] **Option B**: Grant granular roles (if you prefer minimal permissions)
+  - Add roles: Firebase Hosting Admin, Cloud Datastore Index Admin, Firebase Rules Admin
+  - See [FIREBASE_IAM_SETUP.md](FIREBASE_IAM_SETUP.md) for detailed instructions
+
+- [ ] **Verify IAM roles are granted**:
+  - Go to: https://console.cloud.google.com/iam-admin/iam?project=photo2profit-ai
+  - Find your service account in the list
+  - Verify "Firebase Admin" appears in the Role column
+
+**📖 For detailed IAM setup instructions, troubleshooting, and verification steps, see:**
+- **[FIREBASE_IAM_SETUP.md](FIREBASE_IAM_SETUP.md)** ← Complete IAM configuration guide
+
 ---
 
 ## ✅ Step 3: Get Firebase Web Config

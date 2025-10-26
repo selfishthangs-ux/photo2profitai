@@ -10,13 +10,16 @@ Photo2Profit is a next-generation AI resale tool that transforms any photo into 
 ✅ Automated deployment workflow ready  
 
 **For detailed deployment instructions, see:**
+- [CHECKLIST.md](CHECKLIST.md) - Step-by-step deployment checklist (START HERE)
+- [FIREBASE_IAM_SETUP.md](FIREBASE_IAM_SETUP.md) - **IAM roles and permissions setup** ⚠️ IMPORTANT
 - [FIREBASE_DEPLOYMENT_FIXES.md](FIREBASE_DEPLOYMENT_FIXES.md) - Complete fix documentation
-- [CHECKLIST.md](CHECKLIST.md) - Step-by-step deployment checklist
 
 ### Deploy Now
-1. Add Firebase secrets to GitHub (see CHECKLIST.md)
-2. Push to main branch or manually trigger deployment
-3. Your site will be live at: https://photo2profit-ai.web.app
+1. Create Firebase project and generate service account JSON
+2. **Grant IAM roles to service account** (see [FIREBASE_IAM_SETUP.md](FIREBASE_IAM_SETUP.md))
+3. Add Firebase secrets to GitHub (see [CHECKLIST.md](CHECKLIST.md))
+4. Push to main branch or manually trigger deployment
+5. Your site will be live at: https://photo2profit-ai.web.app
 
 ## Backend Setup
 
