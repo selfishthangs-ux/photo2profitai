@@ -283,6 +283,161 @@
     .sign-out:hover {
       background: rgba(255,255,255,0.3);
     }
+
+    /* Upgrade Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 2em;
+      cursor: pointer;
+      color: #666;
+      line-height: 1;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+    }
+
+    .modal-close:hover {
+      color: #c9a9ae;
+    }
+
+    .modal h2 {
+      font-family: 'Cinzel Decorative', serif;
+      color: #2c1810;
+      margin-bottom: 20px;
+    }
+
+    .pricing-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    @media (max-width: 768px) {
+      .pricing-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pricing-card {
+      background: linear-gradient(135deg, #f5e6e8 0%, #fff 100%);
+      border: 2px solid #e0e0e0;
+      border-radius: 15px;
+      padding: 25px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-5px);
+      border-color: #c9a9ae;
+      box-shadow: 0 10px 30px rgba(201, 169, 174, 0.3);
+    }
+
+    .pricing-card.popular {
+      border-color: #c9a9ae;
+      border-width: 3px;
+      background: linear-gradient(135deg, #c9a9ae 0%, #d5c4c7 100%);
+      color: white;
+    }
+
+    .pricing-card.popular h3,
+    .pricing-card.popular .price,
+    .pricing-card.popular p {
+      color: white;
+    }
+
+    .pricing-card h3 {
+      font-size: 1.3em;
+      margin-bottom: 10px;
+      color: #2c1810;
+    }
+
+    .pricing-card .price {
+      font-size: 2.5em;
+      font-weight: bold;
+      color: #c9a9ae;
+      margin: 15px 0;
+    }
+
+    .pricing-card .credits {
+      font-size: 1.1em;
+      font-weight: 600;
+      margin: 10px 0;
+      color: #2c1810;
+    }
+
+    .pricing-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+      text-align: left;
+    }
+
+    .pricing-card li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .pricing-card li:last-child {
+      border-bottom: none;
+    }
+
+    .popular-badge {
+      background: #fff;
+      color: #c9a9ae;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.8em;
+      font-weight: 700;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
@@ -393,6 +548,60 @@
         </div>
       </div>
     </div>
+
+    <!-- Upgrade Modal -->
+    <div id="upgradeModal" class="modal-overlay">
+      <div class="modal">
+        <button class="modal-close" onclick="closeUpgradeModal()">×</button>
+        <h2>🚀 You've Used All Your Free Listings!</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 20px;">
+          Upgrade to keep turning photos into profit
+        </p>
+
+        <div class="pricing-cards">
+          <div class="pricing-card" onclick="selectPlan('casual')">
+            <h3>Casual Seller</h3>
+            <div class="price">$9.99</div>
+            <div class="credits">50 listings/month</div>
+            <ul>
+              <li>✓ AI-powered listings</li>
+              <li>✓ Background removal</li>
+              <li>✓ 3-tier pricing</li>
+              <li>✓ Export to any platform</li>
+            </ul>
+          </div>
+
+          <div class="pricing-card popular" onclick="selectPlan('pro')">
+            <span class="popular-badge">MOST POPULAR</span>
+            <h3>Pro Reseller</h3>
+            <div class="price">$19.99</div>
+            <div class="credits">200 listings/month</div>
+            <ul>
+              <li>✓ Everything in Casual</li>
+              <li>✓ Priority AI processing</li>
+              <li>✓ Advanced analytics</li>
+              <li>✓ Bulk upload (coming soon)</li>
+            </ul>
+          </div>
+
+          <div class="pricing-card" onclick="selectPlan('boss')">
+            <h3>Boss Mode</h3>
+            <div class="price">$29.99</div>
+            <div class="credits">1000 listings/month</div>
+            <ul>
+              <li>✓ Everything in Pro</li>
+              <li>✓ Unlimited listings</li>
+              <li>✓ API access</li>
+              <li>✓ White-label option</li>
+            </ul>
+          </div>
+        </div>
+
+        <p style="text-align: center; color: #999; font-size: 0.9em;">
+          Cancel anytime. No hidden fees.
+        </p>
+      </div>
+    </div>
   </div>
 
   <!-- Firebase SDKs -->
@@ -420,6 +629,7 @@
     let currentUser = null;
     let currentItemId = null;
     let unsubscribeListing = null;
+    let userCredits = 5; // Start with 5 free trial credits
 
     // Auth state listener
     onAuthStateChanged(auth, (user) => {
@@ -503,6 +713,12 @@
         return;
       }
 
+      // Check credits
+      if (userCredits <= 0) {
+        showUpgradeModal();
+        return;
+      }
+
       // Generate item ID
       currentItemId = Date.now().toString();
 
@@ -561,6 +777,10 @@
           showStatus('ai-generating', '✨ AI is writing your listing...');
         } else if (data.status === 'ai_complete') {
           showStatus('complete', '🎉 Listing ready! Check your form →');
+          
+          // Deduct credit
+          userCredits--;
+          updateCreditsDisplay();
           
           // Auto-fill form with AI data
           if (data.ai) {
@@ -648,6 +868,62 @@
       a.href = url;
       a.download = `listing-${currentItemId}.json`;
       a.click();
+    });
+
+    // Upgrade modal functions
+    function showUpgradeModal() {
+      document.getElementById('upgradeModal').classList.add('show');
+    }
+
+    function closeUpgradeModal() {
+      document.getElementById('upgradeModal').classList.remove('show');
+    }
+
+    async function selectPlan(plan) {
+      if (!currentUser) {
+        alert('Please sign in first');
+        return;
+      }
+
+      try {
+        // Call backend to create Stripe checkout
+        const response = await fetch('YOUR_BACKEND_URL/api/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            plan,
+            userId: currentUser.uid
+          })
+        });
+
+        const { url } = await response.json();
+        
+        // Redirect to Stripe checkout
+        window.location.href = url;
+      } catch (error) {
+        console.error('Checkout error:', error);
+        alert('Failed to start checkout. Please try again.');
+      }
+    }
+
+    function updateCreditsDisplay() {
+      // Update header to show remaining credits
+      const header = document.querySelector('#app-section header .tagline');
+      if (header) {
+        header.textContent = `${userCredits} listings remaining`;
+      }
+
+      // Show upgrade modal if out of credits
+      if (userCredits <= 0) {
+        setTimeout(showUpgradeModal, 1000);
+      }
+    }
+
+    // Initialize credits display
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        updateCreditsDisplay();
+      }
     });
   </script>
 </body>

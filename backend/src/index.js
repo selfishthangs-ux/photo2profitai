@@ -2,6 +2,14 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const {
+  PRICING_PLANS,
+  createCheckoutSession,
+  handleSuccessfulPayment,
+  checkCredits,
+  deductCredit
+} = require('./stripe-integration');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -46,6 +54,103 @@ app.get('/api/founding-count', async (req, res) => {
       error: 'Internal server error',
       message: error.message
     });
+  }
+});
+
+// Get pricing plans
+app.get('/api/pricing', (req, res) => {
+  const plans = Object.entries(PRICING_PLANS).map(([key, plan]) => ({
+    id: key,
+    name: plan.name,
+    price: plan.price / 100, // Convert cents to dollars
+    credits: plan.credits,
+    description: plan.description
+  }));
+  
+  res.json({ plans });
+});
+
+// Create Stripe checkout session
+app.post('/api/checkout', async (req, res) => {
+  try {
+    const { plan, userId } = req.body;
+
+    if (!plan || !userId) {
+      return res.status(400).json({ error: 'Missing plan or userId' });
+    }
+
+    const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+    
+    const session = await createCheckoutSession({
+      plan,
+      userId,
+      successUrl: `${baseUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancelUrl: `${baseUrl}/canceled`
+    });
+
+    res.json(session);
+  } catch (error) {
+    console.error('Checkout error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Stripe webhook handler
+app.post('/api/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+  } catch (err) {
+    console.error('Webhook signature verification failed:', err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  // Handle the event
+  switch (event.type) {
+    case 'checkout.session.completed':
+      const session = event.data.object;
+      const { userId, plan, credits } = session.metadata;
+      
+      await handleSuccessfulPayment({
+        userId,
+        plan,
+        subscriptionId: session.subscription
+      });
+      
+      console.log(`✅ Checkout completed for ${userId}, plan: ${plan}`);
+      break;
+
+    case 'customer.subscription.updated':
+    case 'customer.subscription.deleted':
+      console.log(`Subscription ${event.type}:`, event.data.object.id);
+      break;
+
+    default:
+      console.log(`Unhandled event type: ${event.type}`);
+  }
+
+  res.json({ received: true });
+});
+
+// Check user credits
+app.get('/api/credits/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    // In real app, check Firestore
+    // For now, return mock data
+    res.json({
+      hasCredits: true,
+      remaining: 5,
+      plan: 'trial'
+    });
+  } catch (error) {
+    console.error('Credits check error:', error);
+    res.status(500).json({ error: error.message });
   }
 });
 
