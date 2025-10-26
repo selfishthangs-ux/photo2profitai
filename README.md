@@ -2,6 +2,30 @@
 
 Photo2Profit is a next-generation AI resale tool that transforms any photo into a ready-to-sell product listing. Built for creators, thrifters, and e-commerce entrepreneurs, it uses advanced AI to identify products, clean images, suggest optimized prices, and generate listings that sell themselves.
 
+## 🌐 Live Demo
+
+- **Website**: [https://photo2profitai.web.app](https://photo2profitai.web.app) (Firebase Hosting)
+- **API**: [https://photo2profit-backend-production.up.railway.app](https://photo2profit-backend-production.up.railway.app) (Railway)
+
+## Frontend Setup (Firebase Hosting)
+
+The landing page is hosted on Firebase Hosting and provides information about Photo2Profit features, pricing, and status.
+
+### Quick Deploy
+
+```bash
+# Install Firebase CLI
+npm install -g firebase-tools
+
+# Login to Firebase
+firebase login
+
+# Deploy to Firebase Hosting
+firebase deploy --only hosting
+```
+
+See [FIREBASE_SETUP.md](FIREBASE_SETUP.md) for detailed Firebase Hosting setup instructions, troubleshooting, and custom domain configuration.
+
 ## Backend Setup
 
 The backend service provides API endpoints for the Photo2Profit application.
@@ -40,6 +64,7 @@ See [backend/README.md](backend/README.md) for detailed setup instructions and t
 We welcome contributions from the community! Please read our [Contributing Guide](CONTRIBUTING.md) to get started.
 
 ### Quick Links
+- 🔥 [Firebase Hosting Setup](FIREBASE_SETUP.md) - Deploy the landing page
 - 📋 [Contributing Guidelines](CONTRIBUTING.md) - How to contribute to the project
 - 🤖 [Copilot Coding Agent Guide](.github/COPILOT_CODING_AGENT.md) - Instructions for automated contributors
 - 🔒 [Security Policy](.github/CODEOWNERS) - Code ownership and security guidelines

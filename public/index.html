@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Photo2Profit - Transform any photo into a ready-to-sell product listing with AI">
+    <title>Photo2Profit - AI Resale Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1>📸 Photo2Profit</h1>
+            </div>
+            <nav>
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#pricing">Pricing</a>
+                <a href="https://github.com/selfishthangs-ux/photo2profitai" target="_blank">GitHub</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero">
+                <h2>Transform Any Photo Into a Ready-to-Sell Product Listing</h2>
+                <p class="subtitle">Built for creators, thrifters, and e-commerce entrepreneurs. Use advanced AI to identify products, clean images, suggest optimized prices, and generate listings that sell themselves.</p>
+                <div class="cta-buttons">
+                    <button class="btn btn-primary" onclick="alert('Coming Soon!')">Get Started</button>
+                    <button class="btn btn-secondary" onclick="window.location.href='#how-it-works'">Learn More</button>
+                </div>
+            </section>
+
+            <section id="features" class="features">
+                <h2>Features</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🤖</div>
+                        <h3>AI Product Identification</h3>
+                        <p>Advanced AI automatically identifies products from any photo with high accuracy.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">✨</div>
+                        <h3>Image Enhancement</h3>
+                        <p>Clean and enhance product images automatically for professional listings.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💰</div>
+                        <h3>Price Optimization</h3>
+                        <p>Get AI-powered pricing suggestions based on market data and trends.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📝</div>
+                        <h3>Listing Generation</h3>
+                        <p>Generate compelling product descriptions that drive sales.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="how-it-works" class="how-it-works">
+                <h2>How It Works</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Upload Photo</h3>
+                        <p>Take or upload a photo of any product you want to sell.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>AI Processing</h3>
+                        <p>Our AI identifies the product, cleans the image, and suggests pricing.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>Get Listing</h3>
+                        <p>Receive a complete, optimized listing ready for your platform of choice.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="pricing" class="pricing">
+                <h2>Pricing</h2>
+                <div class="pricing-cards">
+                    <div class="pricing-card">
+                        <h3>Free</h3>
+                        <div class="price">$0</div>
+                        <ul>
+                            <li>5 listings per month</li>
+                            <li>Basic AI features</li>
+                            <li>Standard image quality</li>
+                            <li>Community support</li>
+                        </ul>
+                        <button class="btn btn-outline" onclick="alert('Coming Soon!')">Get Started</button>
+                    </div>
+                    <div class="pricing-card featured">
+                        <div class="badge">Founding Member</div>
+                        <h3>Pro</h3>
+                        <div class="price">$29<span>/month</span></div>
+                        <ul>
+                            <li>Unlimited listings</li>
+                            <li>Advanced AI features</li>
+                            <li>Premium image quality</li>
+                            <li>Priority support</li>
+                            <li>Early access to features</li>
+                        </ul>
+                        <button class="btn btn-primary" onclick="checkFoundingMembers()">Join as Founding Member</button>
+                    </div>
+                    <div class="pricing-card">
+                        <h3>Enterprise</h3>
+                        <div class="price">Custom</div>
+                        <ul>
+                            <li>Everything in Pro</li>
+                            <li>API access</li>
+                            <li>Custom integrations</li>
+                            <li>Dedicated support</li>
+                            <li>SLA guarantees</li>
+                        </ul>
+                        <button class="btn btn-outline" onclick="alert('Contact us at hello@photo2profit.com')">Contact Sales</button>
+                    </div>
+                </div>
+                <div id="founding-count" class="founding-count"></div>
+            </section>
+
+            <section class="status">
+                <h2>System Status</h2>
+                <div id="api-status" class="status-box">
+                    <p>Checking API status...</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Photo2Profit. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="https://github.com/selfishthangs-ux/photo2profitai" target="_blank">GitHub</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#features">Features</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
