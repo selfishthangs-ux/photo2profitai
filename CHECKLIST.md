@@ -3,7 +3,8 @@
 ## ✅ Step 1: Firebase Project Setup
 
 ### Create Firebase Project
-- [ ] Go to https://console.firebase.google.com
+- [ ] Go to hgi
+
 - [ ] Click "Add project"
 - [ ] Name: `photo2profit-ai`
 - [ ] Enable Google Analytics (optional)
